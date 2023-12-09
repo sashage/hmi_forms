@@ -1,3 +1,4 @@
+(function() {})(
 var gaMeasurementId = "TL2ET8VS74";
 var AFFILIATE_STORAGE_KEY = "hmi_aaid";
 
@@ -275,3 +276,4 @@ document.addEventListener("DOMContentLoaded", function() {
     
     //runScript();
 });
+);
