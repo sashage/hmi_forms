@@ -277,6 +277,8 @@
 		document.querySelectorAll('[id^="custom_"],label[for^="custom_"]').forEach(function(elem){
 			elem.closest("div.form-group").style.display = "none";
 		});
+        console.log(fields);
+
 		for (let fieldName in fields) {
 			document.querySelectorAll(`input[placeholder="${fieldName}" i]`).forEach(function(elem){
 				if (elem) {
@@ -432,7 +434,6 @@
 		} else {
 	    	cookies = parseCookies(document.cookie);
 	    
-	    	fields = getValuesForInputFields();
 			var formCount = countFormsOnPage();
 			if ( formCount == 2 ) {
 				loadMultformLander();
