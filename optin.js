@@ -364,8 +364,8 @@
 				});
 			});
 		}
-        fields = getValuesForInputFields();
-		processInputFields(fields);
+        var inputFields = getValuesForInputFields();
+		processInputFields(inputFields);
 
 	}
 
