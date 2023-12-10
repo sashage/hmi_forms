@@ -464,9 +464,15 @@
 	//##############################################################################################################
 
     console.log("initializing...")
-    document.addEventListener("DOMContentLoaded", function() {
-        console.log("started...")
+    if (document.readyState === "loading") { 
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("DOM loaded. Starting...")
+            selectScriptForPageType();
+        });
+    } else {
+        console.log("Starting...")
         selectScriptForPageType();
-    });
+    }
+    
 	
 })();
