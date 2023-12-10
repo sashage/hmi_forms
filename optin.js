@@ -299,13 +299,15 @@
 	// ########### single page run function ##################################
 
 	function runScriptSingleForm() {
-		console.log("running script...")
-		document.querySelectorAll('form input[name^="custom_"]').forEach(function(el){
-			el.closest('div.kartra_optin_cg').style.display = "none";
-		});
-	
-		fields = getValuesForInputFields();
-		processInputFields(fields)
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("running script...")
+            document.querySelectorAll('form input[name^="custom_"]').forEach(function(el){
+                el.closest('div.kartra_optin_cg').style.display = "none";
+            });
+        
+            fields = getValuesForInputFields();
+            processInputFields(fields)
+        });
 	}
 
 
