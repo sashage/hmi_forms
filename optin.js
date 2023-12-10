@@ -258,7 +258,7 @@
 		return {
 	        "cookie_fbp": () => generateFBPCookie(),
 	        "cookie_fbc": () => generateFBCCookie(),
-	        "ga_client_id": setClientIdCookie(),
+	        "ga_client_id": () => setClientIdCookie(),
 	        "ga_session_id": () => getSessionID(gaMeasurementId),
 	        "utm_source": () => getUtmOrElValues("utm_source"),
 	        "utm_medium": () => getUtmOrElValues("utm_medium"),
@@ -274,13 +274,11 @@
 	}
 
 	function processInputFields(fields) {
-		document.querySelectorAll('[id^="custom_"],label[for^="custom_"]').forEach(function(elem){
-			elem.closest("div.form-group").style.display = "none";
-		});
-        console.log(fields);
+		hideAllCustomInputs();
+        console.log("fields: ",fields);
 
 		for (let fieldName in fields) {
-			document.querySelectorAll(`input[placeholder="${fieldName}" i]`).forEach(function(elem){
+			document.querySelectorAll(`input[placeholder="${fieldName}"]`).forEach(function(elem){
 				if (elem) {
 					try {
 						elem.value = fields[fieldName]() || "";
@@ -297,24 +295,25 @@
 		return document.referrer;
 	}
 
+    function hideAllCustomInputs() {
+        document.querySelectorAll('input[name^="custom_"],[id^="custom_"],label[for^="custom_"]').forEach(function(el){
+            el.closest('.kartra_optin_cg').style.display = "none !important";
+        });
+    }
+
+
+
 
 	// ########### single page run function ##################################
 
 	function runScriptSingleForm() {
-        document.addEventListener("DOMContentLoaded", function() {
-            console.log("running script...")
-            document.querySelectorAll('form input[name^="custom_"]').forEach(function(el){
-                el.closest('div.kartra_optin_cg').style.display = "none";
-            });
         
-            fields = getValuesForInputFields();
-            processInputFields(fields)
-        });
+        console.log("running script...")
+        
+        hideAllCustomInputs();
+        var inputFields = getValuesForInputFields();
+        processInputFields(inputFields)
 	}
-
-
-
-
 
 	// ########### multi page run function ##################################
 
@@ -369,7 +368,24 @@
 		processInputFields(fields);
 
 	}
+
+
+    //##########################   Landingpage - Singleform   ########################## 
+
+
+    function loadSingleformLander() {
+        setClientIdCookie();
+		storeAffiliateData();
+
+        document.querySelectorAll('a.toggle_optin').forEach(function(btn){
+            btn.addEventListener("click",function(){
+                setTimeout(function() {
+                    runScriptSingleForm();
+                },1000)
+            });
+        });
 	
+    }
 
 	//##########################   Landingpage - Multiform   ########################## 
 
@@ -439,7 +455,7 @@
 				loadMultformLander();
 			}
 			else if ( formCount == 1 ) {
-				runScriptSingleForm();
+				loadSingleformLander();
 			}
 
 		}
@@ -447,6 +463,10 @@
 
 	//##############################################################################################################
 
-	selectScriptForPageType();
+    console.log("initializing...")
+    document.addEventListener("DOMContentLoaded", function() {
+        console.log("started...")
+        selectScriptForPageType();
+    });
 	
 })();
