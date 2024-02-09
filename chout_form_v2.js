@@ -5,7 +5,7 @@ window.addEventListener("load", processTrackingData);
 
 // Define the Google Analytics Measurement ID.
 const gaMeasurementId = "TL2ET8VS74";
-var AFFILIATE_STORAGE_KEY = "hmiaid";
+const AFFILIATE_STORAGE_KEY = "hmiaid";
 const cookies = parseCookies(document.cookie);
 
 function getAffiliateData() {
