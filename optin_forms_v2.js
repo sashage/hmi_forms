@@ -1,6 +1,6 @@
 (function() {
 	const gaMeasurementId = "TL2ET8VS74";
-	var AFFILIATE_STORAGE_KEY = "hmiaid";
+	const AFFILIATE_STORAGE_KEY = "hmiaid";
 	const firstButtonText = "NO";
 	const secondButtonText = "YES";
 	//const firstButtonFormId = "XNl7s2FeYGCp";
