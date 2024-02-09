@@ -1,6 +1,6 @@
 (function() {
 	const gaMeasurementId = "TL2ET8VS74";
-	const AFFILIATE_STORAGE_KEY = "hmiaid";
+	var AFFILIATE_STORAGE_KEY = "hmiaid";
 	const firstButtonText = "NO";
 	const secondButtonText = "YES";
 	//const firstButtonFormId = "XNl7s2FeYGCp";
@@ -47,7 +47,7 @@
 
 			//store affiliate data
 			localStorage.setItem('affiliation','affiliate');
-			localStorage.setItem(AFFILIATE_STORAGE_KEY,btoa(JSON.stringify(json_data)));
+			sessionStorage.setItem(AFFILIATE_STORAGE_KEY,btoa(JSON.stringify(json_data)));
 
 			return json_data;
 
@@ -67,18 +67,21 @@
 				//remove item if invalid
 				console.log("Error",error)
 				localStorage.removeItem(AFFILIATE_STORAGE_KEY);
+				sessionStorage.removeItem(AFFILIATE_STORAGE_KEY);
 				return null;
 			}
 
 			//if not all values are present - delete and return
 			if(!( (json_data.affiliate_id || json_data.affiliate_id_full_string) && json_data.affiliate_timestamp_created && json_data.affiliate_timestamp_expired)) {
 				localStorage.removeItem(AFFILIATE_STORAGE_KEY);
+				sessionStorage.removeItem(AFFILIATE_STORAGE_KEY);
 				return null;
 			}
 
 			// If the data set is expired - delete and return
 			if ( isValueExpired(json_data.affiliate_timestamp_expired) ) {
 				localStorage.removeItem(AFFILIATE_STORAGE_KEY);
+				sessionStorage.removeItem(AFFILIATE_STORAGE_KEY);
 				return null;
 			}
 
@@ -87,6 +90,7 @@
 	
 		// If no data is found or the data is expired, remove it
 		localStorage.removeItem(AFFILIATE_STORAGE_KEY);
+		sessionStorage.removeItem(AFFILIATE_STORAGE_KEY);
 		return null;
 	}
 
