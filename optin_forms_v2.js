@@ -51,6 +51,8 @@
 
 			return json_data;
 
+		} else {
+			localStorage.setItem('affiliation',window.affiliation);
 		}
 
 		return null;
