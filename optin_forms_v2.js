@@ -262,10 +262,14 @@
 		});
 		return cookieObj;
 	}
-	
+
+	function getTimestampInMicroseconds() {
+	  return Date.now() * 1000;
+	}
 
 	function buildTrackingObject() {
 		var obj = {
+			"created_at": getCurrentTimeInMicroseconds(),
 			"cookie_fbp": generateFBPCookie(),
 			"cookie_fbc": generateFBCCookie(),
 			"ga_client_id": setClientIdCookie(),
