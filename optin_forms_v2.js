@@ -263,13 +263,13 @@
 		return cookieObj;
 	}
 
-	function getTimestampInMicroseconds() {
-	  return Date.now() * 1000;
+	function getTimestampInMilliseconds() {
+	  return Date.now();
 	}
 
 	function buildTrackingObject() {
 		var obj = {
-			"created_at": getCurrentTimeInMicroseconds(),
+			"created_at": getTimestampInMilliseconds(),
 			"cookie_fbp": generateFBPCookie(),
 			"cookie_fbc": generateFBCCookie(),
 			"ga_client_id": setClientIdCookie(),
