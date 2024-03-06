@@ -459,6 +459,11 @@
 		return (!!document.querySelector('div[data-kt-type="checkout"]'));
 	}
 
+	function fireLandingPageEvent(){
+		window.dataLayer = window.dataLayer || [];
+		window.dataLayer.push({"event":"landing_page"});
+	}
+
 
 	function selectScriptForPageType() {
 		if ( checkIfCheckoutPage() ) {
@@ -486,10 +491,12 @@
 	if (document.readyState === "loading") { 
 		document.addEventListener("DOMContentLoaded", function() {
 			console.log("DOM loaded. Starting...")
+			fireLandingPageEvent();
 			selectScriptForPageType();
 		});
 	} else {
 		console.log("Starting...")
+		fireLandingPageEvent();
 		selectScriptForPageType();
 	}
 	
