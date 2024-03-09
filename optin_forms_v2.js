@@ -28,7 +28,7 @@
 		
 
 		var json_data =  {};
-		const urlObj = new URL(window.location.href);
+		const urlObj = new URL(decodeURIComponent(window.location.href));
 		const fragment = urlObj.hash.substring(1); // Remove the '#' at the start
 
 		if (fragment.indexOf("a_aid") > -1) {
