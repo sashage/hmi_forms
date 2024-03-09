@@ -40,7 +40,7 @@
 
 		if (fragment.indexOf("a_aid") > -1) {
 			json_data.affiliate_id_full_string = fragment;
-			fragment = decodeURIComponent(fragment);
+			//fragment = decodeURIComponent(fragment);
 			let params = new URLSearchParams(fragment);
 			
 			let hmi_aaid = params.get('a_aid'); //default PAP Affiliare ID from URL
