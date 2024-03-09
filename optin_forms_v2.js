@@ -29,16 +29,22 @@
 
 		var json_data =  {};
 		const urlObj = new URL(decodeURIComponent(window.location.href));
-		const fragment = urlObj.hash.substring(1); // Remove the '#' at the start
+		var fragment = urlObj.hash.substring(1); // Remove the '#' at the start
+
+		
+		// Replace non-alphanumeric characters with an empty string to keep only alphanumeric characters
+		if (fragment !== null && ( fragment.indexOf("?") > -1 || fragment.indexOf("&") > -1 ) ) { // Ensure fragment is not null before applying the regex
+		    fragment = fragment.split("?")[0];
+		    fragment = fragment.split("&")[0];
+		}
 
 		if (fragment.indexOf("a_aid") > -1) {
 			json_data.affiliate_id_full_string = fragment;
 			fragment = decodeURIComponent(fragment);
 			var params = new URLSearchParams(fragment);
 			
-			
 			var hmi_aaid = params.get('a_aid'); //default PAP Affiliare ID from URL
-			
+
 			const now = new Date();
 			const expirationTimestamp = new Date(now.setDate(now.getDate() + 60)).getTime();
 
