@@ -31,10 +31,12 @@
 		const urlObj = new URL(window.location.href);
 		const fragment = urlObj.hash.substring(1); // Remove the '#' at the start
 
-		if (fragment.indexOf("a_aid") == 0) {
+		if (fragment.indexOf("a_aid") > -1) {
 			json_data.affiliate_id_full_string = fragment;
-
-			const params = new URLSearchParams(fragment);
+			fragment = decodeURIComponent(fragment);
+			var params = new URLSearchParams(fragment);
+			
+			
 			var hmi_aaid = params.get('a_aid'); //default PAP Affiliare ID from URL
 			
 			const now = new Date();
