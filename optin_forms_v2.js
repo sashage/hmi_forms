@@ -23,13 +23,13 @@
 		
 	function getAffiliateData() {
 		//check if there is already valid stored affiliate data
-		var stored_data = getAffiliateStorage()
+		let stored_data = getAffiliateStorage()
 		if ( stored_data ) return stored_data;
 		
 
-		var json_data =  {};
-		const urlObj = new URL(decodeURIComponent(window.location.href));
-		var fragment = urlObj.hash.substring(1); // Remove the '#' at the start
+		let json_data =  {};
+		let urlObj = new URL(decodeURIComponent(window.location.href));
+		let fragment = urlObj.hash.substring(1); // Remove the '#' at the start
 
 		
 		// Replace non-alphanumeric characters with an empty string to keep only alphanumeric characters
@@ -41,9 +41,9 @@
 		if (fragment.indexOf("a_aid") > -1) {
 			json_data.affiliate_id_full_string = fragment;
 			fragment = decodeURIComponent(fragment);
-			var params = new URLSearchParams(fragment);
+			let params = new URLSearchParams(fragment);
 			
-			var hmi_aaid = params.get('a_aid'); //default PAP Affiliare ID from URL
+			let hmi_aaid = params.get('a_aid'); //default PAP Affiliare ID from URL
 
 			const now = new Date();
 			const expirationTimestamp = new Date(now.setDate(now.getDate() + 60)).getTime();
