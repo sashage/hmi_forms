@@ -12,7 +12,7 @@
 
 
 	function getRootDomain() {
-		var domain = window.location.hostname;
+		var domain = window.location.hostname || window.location.host || window.location.origin  || window.location.href.split("?")[0];
 		var parts = domain.split('.');
 		if (parts.length > 2) {
 			return '.' + parts.slice(-2).join('.');
@@ -20,15 +20,14 @@
 		return domain;
 	}
 	
-		
+	//check if there is already valid stored affiliate data
 	function getAffiliateData() {
-		//check if there is already valid stored affiliate data
 		let stored_data = getAffiliateStorage()
 		if ( stored_data ) return stored_data;
 		
 
 		let json_data =  {};
-		let urlObj = new URL(decodeURIComponent(window.location.href));
+		let urlObj = new URL(decodeURIComponent(window.location.href)); //make sure the url is properly decoded before using it
 		let fragment = urlObj.hash.substring(1); // Remove the '#' at the start
 
 		
@@ -40,7 +39,7 @@
 
 		if (fragment.indexOf("a_aid") > -1) {
 			json_data.affiliate_id_full_string = fragment;
-			//fragment = decodeURIComponent(fragment);
+
 			let params = new URLSearchParams(fragment);
 			
 			let hmi_aaid = params.get('a_aid'); //default PAP Affiliare ID from URL
@@ -55,6 +54,8 @@
 
 			//store affiliate data
 			localStorage.setItem('affiliation','affiliate');
+
+			//store affiliate_date to session storage. Will be copied to local storage after optin
 			sessionStorage.setItem(AFFILIATE_STORAGE_KEY,btoa(JSON.stringify(json_data)));
 
 			return json_data;
@@ -403,9 +404,9 @@
 
 
 	function loadSingleformLander() {
-		setClientIdCookie();
 		
 		document.querySelectorAll('a.toggle_optin').forEach(function(btn){
+			runScriptSingleForm();
 			btn.addEventListener("click",function(){
 				setTimeout(function() {
 					runScriptSingleForm();
@@ -418,7 +419,6 @@
 	//##########################   Landingpage - Multiform   ########################## 
 
 	function loadMultformLander() {
-		setClientIdCookie();
 		
 		firstButtonContainers = Array.from(document.querySelectorAll('.modal-body div[data-component="button"]')).filter(div => div.textContent.trim().includes(firstButtonText));
 		secondButtonContainers = Array.from(document.querySelectorAll('.modal-body div[data-component="button"]')).filter(div => div.textContent.trim().includes(secondButtonText));
@@ -474,6 +474,7 @@
 
 
 	function selectScriptForPageType() {
+		console.log("Setting or refreshing ga_client_id to ",setClientIdCookie() );
 		if ( checkIfCheckoutPage() ) {
 			//do nothing - run checkout script
 			console.log("Wrong script - implement the checkout page script")
@@ -495,7 +496,10 @@
 
 	//##############################################################################################################
 
-	console.log("initializing...")
+	console.log("initializing...");
+	console.log("setting landing page...");
+	window.page_type = "landing_page";
+
 	if (document.readyState === "loading") { 
 		document.addEventListener("DOMContentLoaded", function() {
 			console.log("DOM loaded. Starting...")
