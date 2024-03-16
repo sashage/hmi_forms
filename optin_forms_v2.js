@@ -404,15 +404,13 @@
 
 
 	function loadSingleformLander() {
-		
+		setTimeout(function() {
+			runScriptSingleForm();
+		},1500);
 		document.querySelectorAll('a.toggle_optin').forEach(function(btn){
-			setTimeout(function() {
-			    runScriptSingleForm();
-			},1500)
+			
 			btn.addEventListener("click",function(){
-				setTimeout(function() {
-					runScriptSingleForm();
-				},600)
+				
 			});
 		});
 	
