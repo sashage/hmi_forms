@@ -406,6 +406,7 @@
 	function loadSingleformLander() {
 		
 		document.querySelectorAll('a.toggle_optin').forEach(function(btn){
+			runScriptSingleForm();
 			btn.addEventListener("click",function(){
 				setTimeout(function() {
 					runScriptSingleForm();
