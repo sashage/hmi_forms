@@ -336,7 +336,7 @@
 
 	function runScriptSingleForm() {
 		
-		console.log("running script...")
+		console.log("running SingleForm script...")
 		
 		hideAllTrackingTextAreas();
 		var trackingData = buildTrackingObject();
@@ -346,6 +346,9 @@
 	// ########### multi page run function ##################################
 
 	function runScriptMultiForm() {
+
+		console.log("running MultiForm script...")
+		
 		// Handle button show/hide logic
 		firstButtonContainers.forEach((btnContainer, index) => {
 			btnContainer.addEventListener("click", function() {
