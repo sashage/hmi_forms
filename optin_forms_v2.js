@@ -407,10 +407,10 @@
 		setTimeout(function() {
 			runScriptSingleForm();
 		},1500);
-		document.querySelectorAll('a.toggle_optin').forEach(function(btn){
+		document.querySelectorAll('a.toggle_optin, a.kartra_button1').forEach(function(btn){
 			
 			btn.addEventListener("click",function(){
-				
+				runScriptSingleForm();
 			});
 		});
 	
