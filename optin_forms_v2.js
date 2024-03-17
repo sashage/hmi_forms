@@ -19,6 +19,11 @@
 		}
 		return domain;
 	}
+
+	function encodeBase64(string) {
+		var b64 = window.btoa(encodeURIComponent(string))
+		return b64;	
+	}
 	
 	//check if there is already valid stored affiliate data
 	function getAffiliateData() {
@@ -56,7 +61,7 @@
 			localStorage.setItem('affiliation','affiliate');
 
 			//store affiliate_date to session storage. Will be copied to local storage after optin
-			sessionStorage.setItem(AFFILIATE_STORAGE_KEY,btoa(JSON.stringify(json_data)));
+			sessionStorage.setItem(AFFILIATE_STORAGE_KEY,encodeBase64(JSON.stringify(json_data)));
 
 			return json_data;
 
@@ -160,9 +165,9 @@
 		var userInfo = storedUserInfo ? JSON.parse(atob(storedUserInfo)) : {};
 		var emailQueryParameter = extractEmailFromURL();
 		if (emailQueryParameter) {
-			userInfo.user_id = btoa(emailQueryParameter);
-			localStorage.setItem("_ud", btoa(JSON.stringify(userInfo)));
-			return btoa(emailQueryParameter);
+			userInfo.user_id = encodeBase64(emailQueryParameter);
+			window.localStorage.setItem("_ud", encodeBase64(JSON.stringify(userInfo)));
+			return encodeBase64(emailQueryParameter);
 		} else if (userInfo && userInfo.user_id) {
 			return userInfo.user_id;
 		}
@@ -313,7 +318,7 @@
 	function fillTrackingTextAreas(json_data) {
 		if (!json_data) return;
 
-		var string_data = btoa(JSON.stringify(json_data));
+		var string_data = encodeBase64(JSON.stringify(json_data));
 		document.querySelectorAll('textarea[placeholder="tracking_data"]').forEach(function(el){
 			el.value = string_data;
 		});
