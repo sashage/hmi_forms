@@ -259,7 +259,9 @@
 			window.setTimeout(() => getSessionID(gaMeasurementId, intervalCount), 200);
 			return;
 		}
-		return parts[0];
+		if ( parts ) return parts[0];
+
+		return null;
 	}
 	
 	function parseCookies(cookieString) {
