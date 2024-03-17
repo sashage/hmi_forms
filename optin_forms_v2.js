@@ -269,7 +269,7 @@
 			window.setTimeout(() => getSessionID(gaMeasurementId, intervalCount), 200);
 			return;
 		}
-		if ( parts ) return parts[0];
+		if ( !!parts ) return parts[0];
 
 		return null;
 	}
