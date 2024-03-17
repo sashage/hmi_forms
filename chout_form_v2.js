@@ -108,7 +108,8 @@ function getSessionID(gaMeasurementId, retries) {
         return;
     }
     
-    return parts[0];
+    if (!!parts) return parts[0];
+    return null;
 }
 
 // Function to handle received messages
