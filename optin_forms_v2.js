@@ -24,6 +24,11 @@
 		var b64 = window.btoa(encodeURIComponent(string))
 		return b64;	
 	}
+
+	function decodeBase64(b64) {
+		var b64 = decodeURIComponent(window.atob(string))
+		return string;	
+	}
 	
 	//check if there is already valid stored affiliate data
 	function getAffiliateData() {
@@ -78,7 +83,7 @@
 		if (stored_data) {
 			var json_data;
 			try {
-				json_data = JSON.parse(atob(stored_data));
+				json_data = JSON.parse(decodeBase64(stored_data));
 			} catch (error) {
 				//remove item if invalid
 				console.log("Error",error)
@@ -162,7 +167,7 @@
 	//Function get last user id
 	function getLastUserId() {
 		var storedUserInfo = localStorage.getItem('_ud');
-		var userInfo = storedUserInfo ? JSON.parse(atob(storedUserInfo)) : {};
+		var userInfo = storedUserInfo ? JSON.parse(decodeBase64(storedUserInfo)) : {};
 		var emailQueryParameter = extractEmailFromURL();
 		if (emailQueryParameter) {
 			userInfo.user_id = encodeBase64(emailQueryParameter);
