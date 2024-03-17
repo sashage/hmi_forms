@@ -26,7 +26,7 @@
 	}
 
 	function decodeBase64(b64) {
-		var b64 = decodeURIComponent(window.atob(string))
+		var string = decodeURIComponent(window.atob(b64))
 		return string;	
 	}
 	
