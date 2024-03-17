@@ -15,12 +15,22 @@ function getAffiliateData() {
     return null; 
 }
 
+function encodeBase64(string) {
+		var b64 = window.btoa(encodeURIComponent(string))
+		return b64;	
+}
+
+function decodeBase64(b64) {
+    var string = decodeURIComponent(window.atob(b64))
+    return string;	
+}
+
 function getAffiliateStorage() {
     const stored_data = localStorage.getItem(AFFILIATE_STORAGE_KEY);
     if (stored_data) {
         var json_data;
         try {
-            json_data = JSON.parse(atob(stored_data));
+            json_data = JSON.parse(decodeBase64(stored_data));
         } catch (error) {
             //remove item if invalid
             console.log("Error",error)
@@ -68,13 +78,13 @@ function getRootDomain() {
 
 function getLastUserId() {
     var storedUserInfo = localStorage.getItem('_ud');
-    var userInfo = storedUserInfo ? JSON.parse(atob(storedUserInfo)) : {};
+    var userInfo = storedUserInfo ? JSON.parse(decodeBase64(storedUserInfo)) : {};
     
     var emailQueryParameter = extractEmailFromURL();
     if ( emailQueryParameter ) {
-        userInfo.user_id = btoa(emailQueryParameter);
+        userInfo.user_id = encodeBase64(emailQueryParameter);
         localStorage.setItem("_ud",encodeBase64(JSON.stringify(userInfo)));
-        return btoa(emailQueryParameter);
+        return encodeBase64(emailQueryParameter);
     } else if (userInfo && userInfo.user_id) {
         return userInfo.user_id;
     }
@@ -311,7 +321,7 @@ function extractEmailFromURL() {
 function fillTrackingTextAreas(json_data) {
     if (!json_data) return;
 
-    var string_data = btoa(JSON.stringify(json_data));
+    var string_data = encodeBase64(JSON.stringify(json_data));
     try {
         var textarea = document.querySelector('textarea[placeholder="Tracking_data"]')
         textarea.setAttribute("maxlength",5000)
