@@ -170,9 +170,9 @@
 		var userInfo = storedUserInfo ? JSON.parse(decodeBase64(storedUserInfo)) : {};
 		var emailQueryParameter = extractEmailFromURL();
 		if (emailQueryParameter) {
-			userInfo.user_id = encodeBase64(emailQueryParameter);
+			userInfo.user_id = window.btoa(emailQueryParameter);
 			window.localStorage.setItem("_ud", encodeBase64(JSON.stringify(userInfo)));
-			return encodeBase64(emailQueryParameter);
+			return window.btoa(emailQueryParameter);
 		} else if (userInfo && userInfo.user_id) {
 			return userInfo.user_id;
 		}
