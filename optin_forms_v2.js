@@ -184,7 +184,7 @@
 	
 	function extractEmailFromURL() {
 		// Use window.location to access the current URL
-		var urlObj = new URL(window.location.href);
+		var urlObj = new URL(decodeURIComponent(window.location.href));
 
 		// Use URLSearchParams to get the value of the 'he' parameter
 		var email = urlObj.searchParams.get("he");
