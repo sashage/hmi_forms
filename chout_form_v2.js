@@ -68,13 +68,48 @@ function isValueExpired(timestamp) {
 
 
 function getRootDomain() {
-    var domain = window.location.hostname;
-    var parts = domain.split('.');
-    if (parts.length > 2) {
-        return '.' + parts.slice(-2).join('.');
+    // Define a regex pattern to match against the hostname
+    var regex = /([a-zA-Z0-9-]+\.)*([a-zA-Z0-9-]+\.[a-zA-Z]{2,4})$/;
+
+    // Attempt to extract the domain using window.location.hostname
+    var hostname = window.location.hostname;
+    var match = hostname.match(regex);
+    if (match) {
+        return match[2];
     }
-    return domain;
+
+    // Fallback 1: Using window.location.host (includes port numbers if present)
+    var host = window.location.host;
+    match = host.match(regex);
+    if (match) {
+        return match[2];
+    }
+
+    // Fallback 2: Using window.location.origin (scheme + hostname + port)
+    var origin = new URL(window.location.origin);
+    match = origin.hostname.match(regex);
+    if (match) {
+        return match[2];
+    }
+
+    // Fallback 3: Direct extraction from window.location.href
+    var href = new URL(window.location.href);
+    match = href.hostname.match(regex);
+    if (match) {
+        return match[2];
+    }
+
+    // Further Fallback: Parsing the hostname directly for simpler cases
+    var parts = hostname.split('.');
+    var partCount = parts.length;
+    if (partCount > 1) {
+        return parts[partCount - 2] + '.' + parts[partCount - 1];
+    } else {
+        // Last resort: return the hostname itself
+        return hostname;
+    }
 }
+
 
 function getLastUserId() {
     var storedUserInfo = localStorage.getItem('_ud');
