@@ -205,7 +205,7 @@
 		var userInfo = storedUserInfo ? JSON.parse(decodeBase64(storedUserInfo)) : {};
 		var emailQueryParameter = extractEmailFromURL();
 		if (emailQueryParameter) {
-			userInfo.user_id = window.btoa(emailQueryParameter);
+			userInfo.user_id = window.btoa(emailQueryParameter.toLowerCase());
 			window.localStorage.setItem("_ud", encodeBase64(JSON.stringify(userInfo)));
 			return window.btoa(emailQueryParameter);
 		} else if (userInfo && userInfo.user_id) {
