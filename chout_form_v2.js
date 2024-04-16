@@ -189,6 +189,12 @@ function getCookieValue(CookieName) {
     return Cookie ? Cookie.split('=')[1] : null;
 }
 
+function getStapeId() {
+    var stape_id = getCookieValue("_hmi_stape_id");
+    if (stape_id) return stape_id;
+    return null;
+}
+
 // Generate or retrieve the Facebook click ID cookie.
 function generateFBCCookie() {
     let cookie_fbc = getCookieValue("_fbc") || undefined;
@@ -319,7 +325,8 @@ function buildTrackingObject() {
         "affiliation": getAffiliation(),
         "page_location": getRootDomain(),
         "last_uid": getLastUserId(),
-        "user_agent": getUserAgent()
+        "user_agent": getUserAgent(),
+	"stape_id": getStapeId()
     };
 
 
