@@ -195,6 +195,10 @@ function getStapeId() {
     return null;
 }
 
+function getSummitName() {
+    return localStorage.getItem("summit_name") || null;
+}
+
 // Generate or retrieve the Facebook click ID cookie.
 function generateFBCCookie() {
     let cookie_fbc = getCookieValue("_fbc") || undefined;
@@ -326,6 +330,7 @@ function buildTrackingObject() {
         "page_location": getRootDomain(),
         "last_uid": getLastUserId(),
         "user_agent": getUserAgent(),
+	"summit_name": getSummitName();
 	"stape_id": getStapeId()
     };
 
