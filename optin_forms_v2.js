@@ -195,6 +195,12 @@
 		return clientId;
 	}
 
+	function getStapeId() {
+		var stape_id = getCookieValue("_hmi_stape_id");
+		if (stape_id) return stape_id;
+		return null;
+	}
+
 	function getAffiliation() {
 		return localStorage.getItem('affiliation');
 	}
@@ -339,7 +345,8 @@
 			"page_location": getRootDomain(),
 			"page_referrer": getPageReferrer(),
 			"last_uid": getLastUserId(),
-			"user_agent": getUserAgent()
+			"user_agent": getUserAgent(),
+			"stape_id": getStapeId(),
 		};
 
 
