@@ -200,6 +200,9 @@
 		if (stape_id) return stape_id;
 		return null;
 	}
+	function getSummitName() {
+	    return localStorage.getItem("summit_name") || null;
+	}
 
 	function getAffiliation() {
 		return localStorage.getItem('affiliation');
@@ -346,6 +349,7 @@
 			"page_referrer": getPageReferrer(),
 			"last_uid": getLastUserId(),
 			"user_agent": getUserAgent(),
+			"summit_name": getSummitName(),
 			"stape_id": getStapeId(),
 		};
 
