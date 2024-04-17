@@ -330,7 +330,7 @@ function buildTrackingObject() {
         "page_location": getRootDomain(),
         "last_uid": getLastUserId(),
         "user_agent": getUserAgent(),
-	"summit_name": getSummitName();
+	"summit_name": getSummitName(),
 	"stape_id": getStapeId()
     };
 
