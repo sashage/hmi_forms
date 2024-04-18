@@ -319,6 +319,7 @@ function buildTrackingObject() {
         "created_at": getTimestampInMilliseconds(),
         "cookie_fbp": generateFBPCookie(),
         "cookie_fbc": generateFBCCookie(),
+	"cookie_ttp": getCookieValue("_ttp"),
         "ga_client_id": setClientIdCookie(),
         "ga_session_id": getSessionID(gaMeasurementId),
         "utm_source": getUtmOrElValues("utm_source"),
