@@ -130,22 +130,38 @@ function getUserAgent() {
 }
 
 // Function to retrieve the Google Analytics session ID from the cookies
-function getSessionID(gaMeasurementId, retries) {
+function getSessionID(gaMeasurementId, retries = 0) {
     const maxRetries = 10;
     if (retries >= maxRetries) return null;
 
-    const pattern = new RegExp(`_ga_${gaMeasurementId}=GS\\d\\.\\d\\.(.+?)(?:;|$)`);
-    const match = document.cookie.match(pattern);
-    const parts = match?.[1].split(".");
-    
-    if (!parts) {
-        window.setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
-        return;
+    try {
+        const pattern = new RegExp(`_ga_${gaMeasurementId}=GS\\d\\.\\d\\.(.+?)(?:;|$)`);
+        const cookie = document.cookie;
+        if (!cookie) {
+            setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
+            return;
+        }
+
+        const match = cookie.match(pattern);
+        if (!match) {
+            setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
+            return;
+        }
+
+        const sessionId = match[1].split(".")[0];
+        if (sessionId) {
+            return sessionId;
+        } else {
+            setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
+        }
+    } catch (error) {
+        console.error('Error retrieving GA4 session ID:', error);
+        setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
     }
-    
-    if (!!parts) return parts[0];
+
     return null;
 }
+
 
 // Function to handle received messages
 function receiveMessage(msg) {
@@ -175,7 +191,7 @@ function parseData(data) {
 
 // Retrieve the Google Analytics client ID from cookies.
 function getClientId() {
-    const gaCookieValue = cookies["_ga"];
+    const gaCookieValue = getCookieValue["_ga"];
     if (gaCookieValue) {
         const parts = gaCookieValue.split(".");
         return `${parts[2]}.${parts[3]}`;
@@ -184,10 +200,27 @@ function getClientId() {
 }
 
 // Get a specific cookie's value by its name.
-function getCookieValue(CookieName) {
-    const Cookie = document.cookie.split(';').find(row => row.trim().startsWith(CookieName));
-    return Cookie ? Cookie.split('=')[1] : null;
+function getCookieValue(name) {
+    // Encode the cookie name to handle special characters
+    name = encodeURIComponent(name);
+
+    // Retrieve all cookies, split them into individual cookie strings
+    const cookieArray = document.cookie.split(';');
+
+    // Iterate through each cookie string
+    for (let i = 0; i < cookieArray.length; i++) {
+        const cookie = cookieArray[i].trim();
+
+        // Check if the current cookie string begins with the encoded name followed by '='
+        if (cookie.indexOf(name + '=') === 0) {
+            return decodeURIComponent(cookie.substring(name.length + 1));
+        }
+    }
+
+    // Return an empty string if the cookie with the specified name is not found
+    return '';
 }
+
 
 function getStapeId() {
     var stape_id = getCookieValue("_hmi_stape_id");
