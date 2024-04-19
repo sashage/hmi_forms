@@ -164,9 +164,25 @@
 		return 'GA1.1.' + randomNumber + '.' + timestampMillis;
 	}
 	
-	function getCookieValue(cookieName) {
-		var matches = document.cookie.match('(^|;)\\s*' + cookieName + '\\s*=\\s*([^;]+)');
-		return matches ? matches.pop() : '';
+	function getCookieValue(name) {
+	    // Encode the cookie name to handle special characters
+	    name = encodeURIComponent(name);
+	
+	    // Retrieve all cookies, split them into individual cookie strings
+	    const cookieArray = document.cookie.split(';');
+	
+	    // Iterate through each cookie string
+	    for (let i = 0; i < cookieArray.length; i++) {
+	        const cookie = cookieArray[i].trim();
+	
+	        // Check if the current cookie string begins with the encoded name followed by '='
+	        if (cookie.indexOf(name + '=') === 0) {
+	            return decodeURIComponent(cookie.substring(name.length + 1));
+	        }
+	    }
+	
+	    // Return an empty string if the cookie with the specified name is not found
+	    return '';
 	}
 	
 	function setClientIdCookie() {
@@ -304,18 +320,36 @@
 	}
 
 	
-	function getSessionID(gaMeasurementId, intervalCount = 0) {
-		const pattern = new RegExp(`_ga_${gaMeasurementId}=GS\\d\\.\\d\\.(.+?)(?:;|$)`);
-		const match = document.cookie.match(pattern);
-		const parts = match?.[1].split(".");
-		if (!parts && intervalCount < 50) {
-			intervalCount += 1;
-			window.setTimeout(() => getSessionID(gaMeasurementId, intervalCount), 200);
-			return;
-		}
-		if ( !!parts ) return parts[0];
-
-		return null;
+	function getSessionID(gaMeasurementId, retries = 0) {
+	    const maxRetries = 10;
+	    if (retries >= maxRetries) return null;
+	
+	    try {
+	        const pattern = new RegExp(`_ga_${gaMeasurementId}=GS\\d\\.\\d\\.(.+?)(?:;|$)`);
+	        const cookie = document.cookie;
+	        if (!cookie) {
+	            setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
+	            return;
+	        }
+	
+	        const match = cookie.match(pattern);
+	        if (!match) {
+	            setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
+	            return;
+	        }
+	
+	        const sessionId = match[1].split(".")[0];
+	        if (sessionId) {
+	            return sessionId;
+	        } else {
+	            setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
+	        }
+	    } catch (error) {
+	        console.error('Error retrieving GA4 session ID:', error);
+	        setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
+	    }
+	
+	    return null;
 	}
 	
 	function parseCookies(cookieString) {
