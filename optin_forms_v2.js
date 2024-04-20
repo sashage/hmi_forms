@@ -64,6 +64,16 @@
 		var string = decodeURIComponent(window.atob(b64))
 		return string;	
 	}
+
+	function extractAffiliateString(string) {
+	  const regex = /a_aid=[a-zA-Z0-9_-]+/;
+	  const match = string.match(regex);
+	  if (match) {
+	    return match[0];
+	  } else {
+	    return null; // or handle the case when the string is not found
+	  }
+	}
 	
 	//check if there is already valid stored affiliate data
 	function getAffiliateData() {
@@ -80,6 +90,10 @@
 		if (fragment !== null && ( fragment.indexOf("?") > -1 || fragment.indexOf("&") > -1 ) ) { // Ensure fragment is not null before applying the regex
 		    fragment = fragment.split("?")[0];
 		    fragment = fragment.split("&")[0];
+		}
+
+		if (fragment !== null) {
+		    fragment = extractAffiliateString(fragment);
 		}
 
 		if (fragment.indexOf("a_aid") > -1) {
