@@ -87,10 +87,10 @@
 
 		
 		// Replace non-alphanumeric characters with an empty string to keep only alphanumeric characters
-		if (fragment !== null && ( fragment.indexOf("?") > -1 || fragment.indexOf("&") > -1 ) ) { // Ensure fragment is not null before applying the regex
-		    fragment = fragment.split("?")[0];
-		    fragment = fragment.split("&")[0];
-		}
+		// if (fragment !== null && ( fragment.indexOf("?") > -1 || fragment.indexOf("&") > -1 ) ) { // Ensure fragment is not null before applying the regex
+		//     fragment = fragment.split("?")[0];
+		//     fragment = fragment.split("&")[0];
+		// }
 
 		if (fragment !== null) {
 		    fragment = extractAffiliateString(fragment);
