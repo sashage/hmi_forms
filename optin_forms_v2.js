@@ -99,8 +99,6 @@
 		if (fragment.indexOf("a_aid") > -1) {
 			json_data.affiliate_id_full_string = fragment;
 
-			fireDataLayerEvent("affiliate_click");
-			
 			let params = new URLSearchParams(fragment);
 			
 			let hmi_aaid = params.get('a_aid'); //default PAP Affiliare ID from URL
@@ -112,6 +110,12 @@
 			json_data.affiliate_timestamp_created = new Date().getTime();
 			json_data.affiliate_timestamp_expired = expirationTimestamp;
 
+			fireDataLayerEvent("affiliate_click",
+					{
+						"affiliate_id": hmi_aaid,
+						"affiliate_id_full_string": fragment	
+					}
+			);
 
 			//store affiliate data
 			localStorage.setItem('affiliation','affiliate');
@@ -579,9 +583,10 @@
 		return (!!document.querySelector('div[data-kt-type="checkout"]'));
 	}
 
-	function fireDataLayerEvent(event){
+	function fireDataLayerEvent(event,payload={}){
+		payload["event"] = event;
 		window.dataLayer = window.dataLayer || [];
-		window.dataLayer.push({"event":event});
+		window.dataLayer.push(payload);
 	}
 
 
