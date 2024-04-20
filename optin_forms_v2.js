@@ -67,11 +67,11 @@
 
 	function extractAffiliateString(string) {
 	  const regex = /a_aid=[a-zA-Z0-9_-]+/;
-	  const match = string.match(regex);
+	  const match = decodeURIComponent(string).match(regex);
 	  if (match) {
 	    return match[0];
 	  } else {
-	    return null; // or handle the case when the string is not found
+	    return string; // return original string if not matched
 	  }
 	}
 	
