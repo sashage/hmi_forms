@@ -109,11 +109,14 @@
 			json_data.affiliate_id = hmi_aaid;
 			json_data.affiliate_timestamp_created = new Date().getTime();
 			json_data.affiliate_timestamp_expired = expirationTimestamp;
+			json_data.affiliate_timestamp_click = new Date().getTime();
+			
 
 			fireDataLayerEvent("affiliate_click",
 					{
 						"affiliate_id": hmi_aaid,
-						"affiliate_id_full_string": fragment	
+						"affiliate_id_full_string": fragment,
+						"affiliate_timestamp_click": affiliate_timestamp_click
 					}
 			);
 
@@ -341,7 +344,7 @@
 
 	
 	function getSessionID(gaMeasurementId, retries = 0) {
-	    const maxRetries = 10;
+	    const maxRetries = 25;
 	    if (retries >= maxRetries) return null;
 	
 	    try {
@@ -415,6 +418,7 @@
 			obj.affiliate_id_full_string = affiliate_data.affiliate_id_full_string;
 			obj.affiliate_timestamp_created = affiliate_data.affiliate_timestamp_created;
 			obj.affiliate_timestamp_expired = affiliate_data.affiliate_timestamp_expired;
+			obj.affiliate_timestamp_click = affiliate_data.affiliate_timestamp_click;
 		}
 
 		return obj;
