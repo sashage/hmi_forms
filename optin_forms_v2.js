@@ -465,27 +465,31 @@
 		// Handle button show/hide logic
 		firstButtonContainers.forEach((btnContainer, index) => {
 			btnContainer.addEventListener("click", function() {
-				modals.forEach(function(modal){
-					let forms = modal.querySelectorAll('form');
-					let firstButtonForm = forms[0];
-					let secondButtonForm = forms[1];
-					if (firstButtonForm) firstButtonForm.style.display = 'block';
-					if (secondButtonForm) secondButtonForm.remove();
-					hideAllButtons();
-				});
+				setTimeout(function(){
+					modals.forEach(function(modal){
+						let forms = modal.querySelectorAll('form');
+						let firstButtonForm = forms[0];
+						let secondButtonForm = forms[1];
+						if (firstButtonForm) firstButtonForm.style.display = 'block';
+						if (secondButtonForm) secondButtonForm.remove();
+						hideAllButtons();
+					});
+				},200);
 			});
 		});
 	
 		secondButtonContainers.forEach((btnContainer, index) => {
 			btnContainer.addEventListener("click", function() {
-				modals.forEach(function(modal){
-					let forms = modal.querySelectorAll('form');
-					let firstButtonForm = forms[0];
-					let secondButtonForm = forms[1];
-					if (secondButtonForm) secondButtonForm.style.display = 'block';
-					if (firstButtonForm) firstButtonForm.remove();
-					hideAllButtons();
-				});
+				setTimeout(function(){
+					modals.forEach(function(modal){
+						let forms = modal.querySelectorAll('form');
+						let firstButtonForm = forms[0];
+						let secondButtonForm = forms[1];
+						if (secondButtonForm) secondButtonForm.style.display = 'block';
+						if (firstButtonForm) firstButtonForm.remove();
+						hideAllButtons();
+					});
+				},200);
 			});
 		});
 	
@@ -562,7 +566,7 @@
 				btn.addEventListener("click",function(){
 					setTimeout(function() {
 						runScriptMultiForm();
-					},1000)
+					},500)
 				});
 				console.log("added event listeners...");
 			});
