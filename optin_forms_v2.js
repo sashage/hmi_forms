@@ -461,7 +461,7 @@
 	function runScriptMultiForm() {
 
 		console.log("running MultiForm script...")
-		
+		resetMultiForms();
 		// Handle button show/hide logic
 		firstButtonContainers.forEach((btnContainer, index) => {
 			btnContainer.addEventListener("click", function() {
@@ -471,7 +471,7 @@
 						let firstButtonForm = forms[0];
 						let secondButtonForm = forms[1];
 						if (firstButtonForm) firstButtonForm.style.display = 'block';
-						if (secondButtonForm) secondButtonForm.remove();
+						if (secondButtonForm) secondButtonForm.style.display = 'none';
 						hideAllButtons();
 					});
 				},200);
@@ -486,7 +486,7 @@
 						let firstButtonForm = forms[0];
 						let secondButtonForm = forms[1];
 						if (secondButtonForm) secondButtonForm.style.display = 'block';
-						if (firstButtonForm) firstButtonForm.remove();
+						if (firstButtonForm) firstButtonForm.style.display = 'none';
 						hideAllButtons();
 					});
 				},200);
@@ -495,8 +495,8 @@
 	
 		//hide buttons on multiform
 		function hideAllButtons() {
-			firstButtonContainers.forEach(buttonContainer => buttonContainer.remove());
-			secondButtonContainers.forEach(buttonContainer => buttonContainer.remove());
+			firstButtonContainers.forEach(buttonContainer => buttonContainer.style.display = 'none');
+			secondButtonContainers.forEach(buttonContainer => buttonContainer.style.display = 'none');
 
 			stepTwoTexts.forEach(function(text){
 				var textElements = document.querySelectorAll('div[aria-controls="'+text+'"]');
@@ -511,6 +511,34 @@
 				});
 			});
 
+		}
+
+		function resetMultiForms() {
+		    // Hide all buttons
+		    firstButtonContainers.forEach(buttonContainer => buttonContainer.style.display = 'block');
+		    secondButtonContainers.forEach(buttonContainer => buttonContainer.style.display = 'block');
+		
+		    // Hide all forms
+		    modals.forEach(modal => {
+		        let forms = modal.querySelectorAll('form');
+		        forms.forEach(form => form.style.display = 'none');
+		    });
+		
+		    // Show the first button text areas
+		    stepOneTexts.forEach(text => {
+		        var textElements = document.querySelectorAll('div[aria-controls="' + text + '"]');
+		        textElements.forEach(elem => {
+		            elem.style.display = "block";
+		        });
+		    });
+		
+		    // Hide the second button text areas
+		    stepTwoTexts.forEach(text => {
+		        var textElements = document.querySelectorAll('div[aria-controls="' + text + '"]');
+		        textElements.forEach(elem => {
+		            elem.style.display = "none";
+		        });
+		    });
 		}
 
 		hideAllTrackingTextAreas();
