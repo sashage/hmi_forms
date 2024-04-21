@@ -522,9 +522,9 @@
 		    modals.forEach(modal => {
 		        let forms = modal.querySelectorAll('form');
 		        forms.forEach(function(form) {
-				form.style.display = 'none');
+				form.style.display = 'none';
 				form.reset();
-			}
+			});
 			
 		    });
 		
