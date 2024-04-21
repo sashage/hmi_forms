@@ -116,7 +116,7 @@
 					{
 						"affiliate_id": hmi_aaid,
 						"affiliate_id_full_string": fragment,
-						"affiliate_timestamp_click": affiliate_timestamp_click
+						"affiliate_timestamp_click": json_data.affiliate_timestamp_click
 					}
 			);
 
