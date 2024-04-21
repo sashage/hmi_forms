@@ -594,7 +594,7 @@
 				btn.addEventListener("click",function(){
 					setTimeout(function() {
 						runScriptMultiForm();
-					},500)
+					},200)
 				});
 				console.log("added event listeners...");
 			});
