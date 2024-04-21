@@ -109,7 +109,7 @@
 			json_data.affiliate_id = hmi_aaid;
 			json_data.affiliate_timestamp_created = new Date().getTime();
 			json_data.affiliate_timestamp_expired = expirationTimestamp;
-			json_data.affiliate_timestamp_click = new Date().getTime();
+			json_data.affiliate_timestamp_click = getTimestampInMicroseconds();
 			
 
 			fireDataLayerEvent("affiliate_click",
@@ -387,6 +387,12 @@
 
 	function getTimestampInMilliseconds() {
 	  return Date.now();
+	}
+
+	function getTimestampInMicroseconds() {
+		var micros = new Date().getTime();
+		var randomNumber = Math.floor(Math.random() * 1000);
+		return parseInt(micros.toString() + randomNumber.toString());
 	}
 
 	function buildTrackingObject() {
