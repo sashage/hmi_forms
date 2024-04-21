@@ -521,7 +521,11 @@
 		    // Hide all forms
 		    modals.forEach(modal => {
 		        let forms = modal.querySelectorAll('form');
-		        forms.forEach(form => form.style.display = 'none');
+		        forms.forEach(function(form) {
+				form.style.display = 'none');
+				form.reset();
+			}
+			
 		    });
 		
 		    // Show the first button text areas
