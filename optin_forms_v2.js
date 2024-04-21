@@ -538,6 +538,8 @@
 		
 		firstButtonContainers = Array.from(document.querySelectorAll('.modal-body div[data-component="button"]')).filter(div => div.textContent.trim().includes(firstButtonText));
 		secondButtonContainers = Array.from(document.querySelectorAll('.modal-body div[data-component="button"]')).filter(div => div.textContent.trim().includes(secondButtonText));
+		console.log("firstButtonContainers: ", firstButtonContainers);
+		console.log("secondButtonContainers: ", secondButtonContainers);
 		modals = Array.from(document.querySelectorAll('.modal-body'));
 		modals.forEach(modal => {
 			let forms = modal.querySelectorAll('form');
@@ -546,6 +548,8 @@
 			if (firstButtonForm) firstButtonForm.style.display = 'none';
 			if (secondButtonForm) secondButtonForm.style.display = 'none';
 		});
+
+		console.log("Hidden respecitive containers.");
 	
 		stepTwoTexts.forEach(function(text){
 			var textElements = document.querySelectorAll('div[aria-controls="'+text+'"]');
@@ -560,6 +564,7 @@
 					runScriptMultiForm();
 				},1000)
 			});
+			console.log("added event listeners...");
 		});
 	}
 
