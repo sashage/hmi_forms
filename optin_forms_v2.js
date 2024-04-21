@@ -535,37 +535,38 @@
 	//##########################   Landingpage - Multiform   ########################## 
 
 	function loadMultformLander() {
+		setTimeout(function(){
+			firstButtonContainers = Array.from(document.querySelectorAll('.modal-body div[data-component="button"]')).filter(div => div.textContent.trim().includes(firstButtonText));
+			secondButtonContainers = Array.from(document.querySelectorAll('.modal-body div[data-component="button"]')).filter(div => div.textContent.trim().includes(secondButtonText));
+			console.log("firstButtonContainers: ", firstButtonContainers);
+			console.log("secondButtonContainers: ", secondButtonContainers);
+			modals = Array.from(document.querySelectorAll('.modal-body'));
+			modals.forEach(modal => {
+				let forms = modal.querySelectorAll('form');
+				let firstButtonForm = forms[0];
+				let secondButtonForm = forms[1];
+				if (firstButtonForm) firstButtonForm.style.display = 'none';
+				if (secondButtonForm) secondButtonForm.style.display = 'none';
+			});
+	
+			console.log("Hidden respecitive containers.");
 		
-		firstButtonContainers = Array.from(document.querySelectorAll('.modal-body div[data-component="button"]')).filter(div => div.textContent.trim().includes(firstButtonText));
-		secondButtonContainers = Array.from(document.querySelectorAll('.modal-body div[data-component="button"]')).filter(div => div.textContent.trim().includes(secondButtonText));
-		console.log("firstButtonContainers: ", firstButtonContainers);
-		console.log("secondButtonContainers: ", secondButtonContainers);
-		modals = Array.from(document.querySelectorAll('.modal-body'));
-		modals.forEach(modal => {
-			let forms = modal.querySelectorAll('form');
-			let firstButtonForm = forms[0];
-			let secondButtonForm = forms[1];
-			if (firstButtonForm) firstButtonForm.style.display = 'none';
-			if (secondButtonForm) secondButtonForm.style.display = 'none';
-		});
-
-		console.log("Hidden respecitive containers.");
-	
-		stepTwoTexts.forEach(function(text){
-			var textElements = document.querySelectorAll('div[aria-controls="'+text+'"]');
-			textElements.forEach(function(elem){
-				elem.style.display = "none";
+			stepTwoTexts.forEach(function(text){
+				var textElements = document.querySelectorAll('div[aria-controls="'+text+'"]');
+				textElements.forEach(function(elem){
+					elem.style.display = "none";
+				});
 			});
-		});
-	
-		document.querySelectorAll('a.toggle_contentbox').forEach(function(btn){
-			btn.addEventListener("click",function(){
-				setTimeout(function() {
-					runScriptMultiForm();
-				},1000)
+		
+			document.querySelectorAll('a.toggle_contentbox').forEach(function(btn){
+				btn.addEventListener("click",function(){
+					setTimeout(function() {
+						runScriptMultiForm();
+					},1000)
+				});
+				console.log("added event listeners...");
 			});
-			console.log("added event listeners...");
-		});
+		},500);
 	}
 
 
