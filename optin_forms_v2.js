@@ -641,7 +641,7 @@
 	}
 
 	function fireDataLayerEvent(event,payload={}){
-		if ( dataLayerPushes.includes(event) return;
+		if ( dataLayerPushes.includes(event) ) return;
 		payload["event"] = event;
 		window.dataLayer = window.dataLayer || [];
 		window.dataLayer.push(payload);
