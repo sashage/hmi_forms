@@ -9,7 +9,8 @@
 	const stepTwoTexts = ["cke_8066"];
 
 	let cookies,formType,fields,firstButtonContainers,secondButtonContainers,firstButtonForms,secondButtonForms,modals;
-	let affiliate_timestamp_click;
+	let affiliateTimestampClick;
+	let dataLayerPushes = [];
 
 	function getRootDomain() {
 	    // Define a regex pattern to match against the hostname
@@ -106,21 +107,21 @@
 			const now = new Date();
 			const expirationTimestamp = new Date(now.setDate(now.getDate() + 60)).getTime();
 
-			if (!affiliate_timestamp_click) {
-				affiliate_timestamp_click = getTimestampInMicroseconds();
+			if (!affiliateTimestampClick) {
+				affiliateTimestampClick = getTimestampInMicroseconds();
 			}
 			
 			json_data.affiliate_id = hmi_aaid;
 			json_data.affiliate_timestamp_created = new Date().getTime();
 			json_data.affiliate_timestamp_expired = expirationTimestamp;
-			json_data.affiliate_timestamp_click = affiliate_timestamp_click;
+			json_data.affiliate_timestamp_click = affiliateTimestampClick;
 			
 
 			fireDataLayerEvent("affiliate_click",
 					{
 						"affiliate_id": hmi_aaid,
 						"affiliate_id_full_string": fragment,
-						"affiliate_timestamp_click": json_data.affiliate_timestamp_click
+						"affiliate_timestamp_click": affiliateTimestampClick
 					}
 			);
 
@@ -640,9 +641,12 @@
 	}
 
 	function fireDataLayerEvent(event,payload={}){
+		if ( dataLayerPushes.includes(event) return;
 		payload["event"] = event;
 		window.dataLayer = window.dataLayer || [];
 		window.dataLayer.push(payload);
+		dataLayerPushes.push(event);
+		
 	}
 
 
