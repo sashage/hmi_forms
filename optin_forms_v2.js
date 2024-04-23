@@ -10,6 +10,7 @@
 
 	let cookies,formType,fields,firstButtonContainers,secondButtonContainers,firstButtonForms,secondButtonForms,modals;
 	let affiliateTimestampClick;
+	let currentAffiliateClickIsAttributable = 1; //by default current affiliate is considered to be the first
 	let dataLayerPushes = [];
 
 	function getRootDomain() {
@@ -79,10 +80,18 @@
 	//check if there is already valid stored affiliate data
 	function getAffiliateData() {
 		let stored_data = getAffiliateStorage()
-		if ( stored_data ) return stored_data;
-		
+		if ( stored_data && !stored_data["is_stored_affiliate_id"] ) return stored_data; //only return affiliate data if not read from affiliate storage
 
 		let json_data =  {};
+		if ( stored_data && stored_data["is_stored_affiliate_id"] ) {
+			currentAffiliateClickIsAttributable = 0 //previous affiliate_id was detected
+			json_data.restored_affiliate_id_full_string = stored_data.affiliate_id_full_string;
+			json_data.restored_affiliate_id = stored_data.affiliate_id;
+			json_data.restored_affiliate_id_timestamp_created = stored_data.affiliate_id_timestamp_created;
+			json_data.restored_affiliate_id_timestamp_expired = stored_data.affiliate_id_timestamp_expired;
+		}
+
+		
 		let urlObj = new URL(decodeURIComponent(window.location.href)); //make sure the url is properly decoded before using it
 		let fragment = urlObj.hash.substring(1); // Remove the '#' at the start
 
@@ -115,21 +124,30 @@
 			json_data.affiliate_timestamp_created = new Date().getTime();
 			json_data.affiliate_timestamp_expired = expirationTimestamp;
 			json_data.affiliate_timestamp_click = affiliateTimestampClick;
+			json_data.currentAffiliateClickIsAttributable = currentAffiliateClickIsAttributable;
 			
 
-			fireDataLayerEvent("affiliate_click",
-					{
-						"affiliate_id": hmi_aaid,
-						"affiliate_id_full_string": fragment,
-						"affiliate_timestamp_click": affiliateTimestampClick
-					}
+			fireDataLayerEvent("affiliate_click",json_data
+					// {
+					// 	"affiliate_id": hmi_aaid,
+					// 	"affiliate_id_full_string": fragment,
+					// 	"affiliate_timestamp_click": affiliateTimestampClick,
+					// 	"currentAffiliateClickIsAttributable": currentAffiliateClickIsAttributable || undefined
+					// }
 			);
 
 			//store affiliate data
 			localStorage.setItem('affiliation','affiliate');
 
 			//store affiliate_date to session storage. Will be copied to local storage after optin
-			sessionStorage.setItem(AFFILIATE_STORAGE_KEY,encodeBase64(JSON.stringify(json_data)));
+
+			if (currentAffiliateClickIsAttributable && currentAffiliateClickIsAttributable == 1) { //only set sessionStorage if current affiliate is attributable
+				delete json_data.restored_affiliate_id_full_string;
+				delete json_data.restored_affiliate_id;
+				delete json_data.restored_affiliate_id_timestamp_created;
+				delete json_data.restored_affiliate_id_timestamp_expired;
+				sessionStorage.setItem(AFFILIATE_STORAGE_KEY,encodeBase64(JSON.stringify(json_data)));
+			}
 
 			return json_data;
 
@@ -142,37 +160,52 @@
 	}
 
 	function getAffiliateStorage() {
-		const stored_data = localStorage.getItem(AFFILIATE_STORAGE_KEY);
-		if (stored_data) {
+		const local_data = localStorage.getItem(AFFILIATE_STORAGE_KEY);
+		const session_data = sessionStorage.getItem(AFFILIATE_STORAGE_KEY);
+		if ( local_data ) {
 			var json_data;
 			try {
-				json_data = JSON.parse(decodeBase64(stored_data));
+				json_data = JSON.parse(decodeBase64(local_data));
 			} catch (error) {
 				//remove item if invalid
 				console.log("Error",error)
 				localStorage.removeItem(AFFILIATE_STORAGE_KEY);
-				sessionStorage.removeItem(AFFILIATE_STORAGE_KEY);
+				//sessionStorage.removeItem(AFFILIATE_STORAGE_KEY);
 				return null;
 			}
 
 			//if not all values are present - delete and return
 			if(!( (json_data.affiliate_id || json_data.affiliate_id_full_string) && json_data.affiliate_timestamp_created && json_data.affiliate_timestamp_expired)) {
 				localStorage.removeItem(AFFILIATE_STORAGE_KEY);
-				sessionStorage.removeItem(AFFILIATE_STORAGE_KEY);
+				//sessionStorage.removeItem(AFFILIATE_STORAGE_KEY);
 				return null;
 			}
 
 			// If the data set is expired - delete and return
 			if ( isValueExpired(json_data.affiliate_timestamp_expired) ) {
 				localStorage.removeItem(AFFILIATE_STORAGE_KEY);
-				sessionStorage.removeItem(AFFILIATE_STORAGE_KEY);
+				//sessionStorage.removeItem(AFFILIATE_STORAGE_KEY);
 				return null;
 			}
 
+			json_data["is_stored_affiliate_id"] = 1 //add field to indicate that the affilaite ID was loaded from storage
 			return json_data;
 		}
+
+		else if ( session_data ) {
+			var json_data;
+			try {
+				json_data = JSON.parse(decodeBase64(session_data));
+				return json_data;
+			} catch (error) {
+				//remove item if invalid
+				console.log("Error",error)
+				sessionStorage.removeItem(AFFILIATE_STORAGE_KEY);
+				return null;
+			}
+		}
 	
-		// If no data is found or the data is expired, remove it
+		// If no valid data is found or the data is expired, remove it
 		localStorage.removeItem(AFFILIATE_STORAGE_KEY);
 		sessionStorage.removeItem(AFFILIATE_STORAGE_KEY);
 		return null;
@@ -430,6 +463,7 @@
 			obj.affiliate_timestamp_created = affiliate_data.affiliate_timestamp_created;
 			obj.affiliate_timestamp_expired = affiliate_data.affiliate_timestamp_expired;
 			obj.affiliate_timestamp_click = affiliate_data.affiliate_timestamp_click;
+			obj.currentAffiliateClickIsAttributable = affiliate_data.currentAffiliateClickIsAttributable;
 		}
 
 		return obj;
