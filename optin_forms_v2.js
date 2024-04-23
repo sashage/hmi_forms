@@ -104,16 +104,16 @@
 
         if (fragment !== null) {
             fragemnt = decodeURIComponent(fragment);
-            fragment = extractAffiliateString(fragment);
+            fragment = extractAffiliateString(decodeURIComponent(fragment));
         }
 
         if (fragment.indexOf("a_aid") > -1) {
             json_data.affiliate_id_full_string = fragment;
-
-            let params = new URLSearchParams(fragment);
-
-            let hmi_aaid = params.get('a_aid'); //default PAP Affiliare ID from URL
-
+            
+            //let params = new URLSearchParams(fragment);
+            //let hmi_aaid = params.get('a_aid'); //default PAP Affiliare ID from URL
+            let hmi_aaid = fragment.split("=")[1];
+            
             const now = new Date();
             const expirationTimestamp = new Date(now.setDate(now.getDate() + 60)).getTime();
 
