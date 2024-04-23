@@ -128,7 +128,7 @@
             json_data.affiliate_id = hmi_aaid;
             json_data.affiliate_timestamp_created = new Date().getTime();
             json_data.affiliate_timestamp_expired = expirationTimestamp;
-            json_data.affiliate_timestamp_click = affiliateTimestampClick;
+            json_data.affiliate_timestamp_click = getAffiliateTimestampClick();
             json_data.currentAffiliateClickIsAttributable = currentAffiliateClickIsAttributable;
 
 
@@ -136,7 +136,7 @@
                 // {
                 // 	"affiliate_id": hmi_aaid,
                 // 	"affiliate_id_full_string": fragment,
-                // 	"affiliate_timestamp_click": affiliateTimestampClick,
+                // 	"affiliate_timestamp_click": getAffiliateTimestampClick();,
                 // 	"currentAffiliateClickIsAttributable": currentAffiliateClickIsAttributable || undefined
                 // }
             );
