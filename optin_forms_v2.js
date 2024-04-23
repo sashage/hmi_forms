@@ -87,8 +87,8 @@
 			currentAffiliateClickIsAttributable = 0 //previous affiliate_id was detected
 			json_data.restored_affiliate_id_full_string = stored_data.affiliate_id_full_string;
 			json_data.restored_affiliate_id = stored_data.affiliate_id;
-			json_data.restored_affiliate_id_timestamp_created = stored_data.affiliate_id_timestamp_created;
-			json_data.restored_affiliate_id_timestamp_expired = stored_data.affiliate_id_timestamp_expired;
+			json_data.restored_affiliate_timestamp_created = stored_data.affiliate_id_timestamp_created;
+			json_data.restored_affiliate_timestamp_expired = stored_data.affiliate_id_timestamp_expired;
 		}
 
 		
@@ -144,8 +144,8 @@
 			if (currentAffiliateClickIsAttributable && currentAffiliateClickIsAttributable == 1) { //only set sessionStorage if current affiliate is attributable
 				delete json_data.restored_affiliate_id_full_string;
 				delete json_data.restored_affiliate_id;
-				delete json_data.restored_affiliate_id_timestamp_created;
-				delete json_data.restored_affiliate_id_timestamp_expired;
+				delete json_data.restored_affiliate_timestamp_created;
+				delete json_data.restored_affiliate_timestamp_expired;
 				sessionStorage.setItem(AFFILIATE_STORAGE_KEY,encodeBase64(JSON.stringify(json_data)));
 			}
 
