@@ -427,7 +427,7 @@
     }
 
     function getTimestampInMilliseconds() {
-        return Date.now();
+        return Date.now() || new Date().getTime();
     }
 
     function getTimestampInMicroseconds() {
