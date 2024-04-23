@@ -728,7 +728,7 @@
             console.log("DOM Ready. Starting...")
             fireDataLayerEvent("landing_page");
             selectScriptForPageType();
-        }, 200);
+        }, 250);
     });
 
     if (document.readyState === "interactive") {
@@ -736,7 +736,7 @@
             console.log("Page is interactive. Starting...")
             fireDataLayerEvent("landing_page");
             selectScriptForPageType();
-        }, 200);
+        }, 300);
     }
 
 
