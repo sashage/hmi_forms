@@ -614,7 +614,7 @@
         setTimeout(function () {
             runScriptSingleForm();
         }, 1500);
-        document.querySelectorAll('a.toggle_optin, a.kartra_button1').forEach(function (btn) {
+        document.querySelectorAll('a.toggle_optin, a.kartra_button1, button[type="submit"]').forEach(function (btn) {
 
             btn.addEventListener("click", function () {
                 runScriptSingleForm();
@@ -649,7 +649,7 @@
                 });
             });
 
-            document.querySelectorAll('a.toggle_contentbox').forEach(function (btn) {
+            document.querySelectorAll('a.toggle_contentbox, button[type="submit"]').forEach(function (btn) {
                 btn.addEventListener("click", function () {
                     setTimeout(function () {
                         runScriptMultiForm();
