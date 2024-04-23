@@ -9,7 +9,7 @@
     const stepTwoTexts = ["cke_8066"];
 
     let cookies, formType, fields, firstButtonContainers, secondButtonContainers, firstButtonForms, secondButtonForms, modals;
-    let affiliateTimestampClick;
+    let affiliateTimestampClick = undefined;
     let currentAffiliateClickIsAttributable = 1; //by default current affiliate is considered to be the first
     let dataLayerPushes = [];
 
@@ -149,6 +149,7 @@
                 delete session_json_data.restored_affiliate_id;
                 delete session_json_data.restored_affiliate_timestamp_created;
                 delete session_json_data.restored_affiliate_timestamp_expired;
+                delete session_json_data.currentAffiliateClickIsAttributable;
                 sessionStorage.setItem(AFFILIATE_STORAGE_KEY, encodeBase64(JSON.stringify(session_json_data)));
             }
 
