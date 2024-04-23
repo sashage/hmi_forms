@@ -431,7 +431,7 @@
     }
 
     function getTimestampInMicroseconds() {
-        var micros = new Date().getTime();
+        var micros = getTimestampInMilliseconds();
         var randomNumber = Math.floor(Math.random() * 1000);
         return parseInt(micros.toString() + randomNumber.toString());
     }
