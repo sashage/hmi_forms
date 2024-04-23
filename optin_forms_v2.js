@@ -9,7 +9,7 @@
     const stepTwoTexts = ["cke_8066"];
 
     let cookies, formType, fields, firstButtonContainers, secondButtonContainers, firstButtonForms, secondButtonForms, modals;
-    let affiliateTimestampClick = undefined;
+    let affiliateTimestampClick = getTimestampInMicroseconds();
     let currentAffiliateClickIsAttributable = 1; //by default current affiliate is considered to be the first
     let dataLayerPushes = [];
 
