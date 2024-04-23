@@ -142,11 +142,12 @@
 			//store affiliate_date to session storage. Will be copied to local storage after optin
 
 			if (currentAffiliateClickIsAttributable && currentAffiliateClickIsAttributable == 1) { //only set sessionStorage if current affiliate is attributable
-				delete json_data.restored_affiliate_id_full_string;
-				delete json_data.restored_affiliate_id;
-				delete json_data.restored_affiliate_timestamp_created;
-				delete json_data.restored_affiliate_timestamp_expired;
-				sessionStorage.setItem(AFFILIATE_STORAGE_KEY,encodeBase64(JSON.stringify(json_data)));
+				var session_json_data = json_data;
+				delete session_json_data.restored_affiliate_id_full_string;
+				delete session_json_data.restored_affiliate_id;
+				delete session_json_data.restored_affiliate_timestamp_created;
+				delete session_json_data.restored_affiliate_timestamp_expired;
+				sessionStorage.setItem(AFFILIATE_STORAGE_KEY,encodeBase64(JSON.stringify(session_json_data)));
 			}
 
 			return json_data;
