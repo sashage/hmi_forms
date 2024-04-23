@@ -129,7 +129,7 @@
             json_data.affiliate_timestamp_created = new Date().getTime();
             json_data.affiliate_timestamp_expired = expirationTimestamp;
             json_data.affiliate_timestamp_click = getAffiliateTimestampClick();
-            json_data.currentAffiliateClickIsAttributable = currentAffiliateClickIsAttributable;
+            json_data.current_affiliate_click_is_attributable = currentAffiliateClickIsAttributable;
 
 
             fireDataLayerEvent("affiliate_click", json_data
@@ -152,7 +152,7 @@
                 delete session_json_data.restored_affiliate_id;
                 delete session_json_data.restored_affiliate_timestamp_created;
                 delete session_json_data.restored_affiliate_timestamp_expired;
-                delete session_json_data.currentAffiliateClickIsAttributable;
+                delete session_json_data.current_affiliate_click_is_attributable;
                 sessionStorage.setItem(AFFILIATE_STORAGE_KEY, encodeBase64(JSON.stringify(session_json_data)));
             }
 
@@ -474,7 +474,7 @@
             obj.restored_affiliate_id_full_string = affiliate_data.restored_affiliate_id_full_string;
             obj.restored_affiliate_timestamp_created = affiliate_data.restored_affiliate_timestamp_created;
             obj.restored_affiliate_timestamp_expired = affiliate_data.restored_affiliate_timestamp_expired;
-            obj.currentAffiliateClickIsAttributable = affiliate_data.currentAffiliateClickIsAttributable;
+            obj.current_affiliate_click_is_attributable = affiliate_data.current_affiliate_click_is_attributable;
         }
 
         return obj;
