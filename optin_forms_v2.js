@@ -77,12 +77,15 @@
         }
     }
 
+    function getAffiliateTimestampClick() {
+        affiliateTimestampClick = affiliateTimestampClick || getTimestampInMicroseconds();
+        return affiliateTimestampClick;
+    }
+
     //check if there is already valid stored affiliate data
     function getAffiliateData() {
         
-        if (!affiliateTimestampClick) {
-            affiliateTimestampClick = getTimestampInMicroseconds();
-        }
+        getAffiliateTimestampClick();
         
         let stored_data = getAffiliateStorage()
         if (stored_data && !stored_data["is_stored_affiliate_id"]) return stored_data; //only return affiliate data if not read from affiliate storage
@@ -466,7 +469,7 @@
             obj.affiliate_id_full_string = affiliate_data.affiliate_id_full_string;
             obj.affiliate_timestamp_created = affiliate_data.affiliate_timestamp_created;
             obj.affiliate_timestamp_expired = affiliate_data.affiliate_timestamp_expired;
-            obj.affiliate_timestamp_click = affiliateTimestampClick || undefined;
+            obj.affiliate_timestamp_click = getAffiliateTimestampClick();
             obj.restored_affiliate_id = affiliate_data.restored_affiliate_id;
             obj.restored_affiliate_id_full_string = affiliate_data.restored_affiliate_id_full_string;
             obj.restored_affiliate_timestamp_created = affiliate_data.restored_affiliate_timestamp_created;
