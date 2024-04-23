@@ -441,43 +441,45 @@
     }
 
     function buildTrackingObject() {
+
+        var affiliate_data = getAffiliateData();
+        affObj = {};
+        if (affiliate_data && (affiliate_data.affiliate_id || affiliate_data.affiliate_id_full_string)) {      
+            affObj.affiliate_id = affiliate_data.affiliate_id;
+            affObj.affiliate_id_full_string = affiliate_data.affiliate_id_full_string;
+            affObj.affiliate_timestamp_created = affiliate_data.affiliate_timestamp_created;
+            affObj.affiliate_timestamp_expired = affiliate_data.affiliate_timestamp_expired;
+            affObj.affiliate_timestamp_click = getAffiliateTimestampClick();
+            affObj.restored_affiliate_id = affiliate_data.restored_affiliate_id;
+            affObj.restored_affiliate_id_full_string = affiliate_data.restored_affiliate_id_full_string;
+            affObj.restored_affiliate_timestamp_created = affiliate_data.restored_affiliate_timestamp_created;
+            affObj.restored_affiliate_timestamp_expired = affiliate_data.restored_affiliate_timestamp_expired;
+            affObj.current_affiliate_click_is_attributable = affiliate_data.current_affiliate_click_is_attributable;
+        }
+        
         var obj = {
             "created_at": getTimestampInMilliseconds(),
+            "stape_id": getStapeId(),
+            "ga_client_id": setClientIdCookie(),
+            "ga_session_id": getSessionID(gaMeasurementId),
+            "affiliation": getAffiliation(),
+            "page_referrer": getPageReferrer(),
+            "last_uid": getLastUserId(),
+            "user_agent": getUserAgent(),
+            "summit_name": getSummitName(),
             "cookie_fbp": generateFBPCookie(),
             "cookie_fbc": generateFBCCookie(),
             "cookie_ttp": getCookieValue("_ttp"),
-            "ga_client_id": setClientIdCookie(),
-            "ga_session_id": getSessionID(gaMeasurementId),
             "utm_source": getUtmOrElValues("utm_source"),
             "utm_medium": getUtmOrElValues("utm_medium"),
             "utm_campaign": getUtmOrElValues("utm_campaign"),
             "utm_content": getUtmOrElValues("utm_content"),
             "utm_term": getUtmOrElValues("utm_term"),
-            "affiliation": getAffiliation(),
             "page_location": getRootDomain(),
-            "page_referrer": getPageReferrer(),
-            "last_uid": getLastUserId(),
-            "user_agent": getUserAgent(),
-            "summit_name": getSummitName(),
-            "stape_id": getStapeId(),
         };
 
-
-        var affiliate_data = getAffiliateData();
-        if (affiliate_data && (affiliate_data.affiliate_id || affiliate_data.affiliate_id_full_string)) {
-            obj.affiliate_id = affiliate_data.affiliate_id;
-            obj.affiliate_id_full_string = affiliate_data.affiliate_id_full_string;
-            obj.affiliate_timestamp_created = affiliate_data.affiliate_timestamp_created;
-            obj.affiliate_timestamp_expired = affiliate_data.affiliate_timestamp_expired;
-            obj.affiliate_timestamp_click = getAffiliateTimestampClick();
-            obj.restored_affiliate_id = affiliate_data.restored_affiliate_id;
-            obj.restored_affiliate_id_full_string = affiliate_data.restored_affiliate_id_full_string;
-            obj.restored_affiliate_timestamp_created = affiliate_data.restored_affiliate_timestamp_created;
-            obj.restored_affiliate_timestamp_expired = affiliate_data.restored_affiliate_timestamp_expired;
-            obj.current_affiliate_click_is_attributable = affiliate_data.current_affiliate_click_is_attributable;
-        }
-
-        return obj;
+        var mergedObj = Object.assign({}, affObj, obj);
+        return mergedObj;
 
     }
 
