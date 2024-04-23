@@ -103,6 +103,7 @@
         // }
 
         if (fragment !== null) {
+            fragemnt = decodeURIComponent(fragment);
             fragment = extractAffiliateString(fragment);
         }
 
