@@ -79,6 +79,11 @@
 
     //check if there is already valid stored affiliate data
     function getAffiliateData() {
+        
+        if (!affiliateTimestampClick) {
+            affiliateTimestampClick = getTimestampInMicroseconds();
+        }
+        
         let stored_data = getAffiliateStorage()
         if (stored_data && !stored_data["is_stored_affiliate_id"]) return stored_data; //only return affiliate data if not read from affiliate storage
 
@@ -116,10 +121,6 @@
             
             const now = new Date();
             const expirationTimestamp = new Date(now.setDate(now.getDate() + 60)).getTime();
-
-            if (!affiliateTimestampClick) {
-                affiliateTimestampClick = getTimestampInMicroseconds();
-            }
 
             json_data.affiliate_id = hmi_aaid;
             json_data.affiliate_timestamp_created = new Date().getTime();
