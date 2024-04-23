@@ -463,7 +463,7 @@
 			obj.affiliate_id_full_string = affiliate_data.affiliate_id_full_string;
 			obj.affiliate_timestamp_created = affiliate_data.affiliate_timestamp_created;
 			obj.affiliate_timestamp_expired = affiliate_data.affiliate_timestamp_expired;
-			obj.affiliate_timestamp_click = affiliateTimestampClick;
+			obj.affiliate_timestamp_click = affiliateTimestampClick || undefined;
 			obj.restored_affiliate_id = affiliate_data.restored_affiliate_id;
 			obj.restored_affiliate_id_full_string = affiliate_data.restored_affiliate_id_full_string;
 			obj.restored_affiliate_timestamp_created = affiliate_data.restored_affiliate_timestamp_created;
