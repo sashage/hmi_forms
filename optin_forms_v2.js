@@ -117,7 +117,7 @@
             
             //let params = new URLSearchParams(fragment);
             //let hmi_aaid = params.get('a_aid'); //default PAP Affiliare ID from URL
-            let hmi_aaid = fragment.replace(/\s+/g, "").split("=")[1];
+            let hmi_aaid = fragment.replace(/\s+/g, "").split("=")[1].trim();
             
             const now = new Date();
             const expirationTimestamp = new Date(now.setDate(now.getDate() + 60)).getTime();
