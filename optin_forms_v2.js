@@ -69,7 +69,7 @@
 
     function extractAffiliateString(string) {
         const regex = /a_aid=[a-zA-Z0-9_-]+/;
-        const match = decodeURIComponent(string).match(regex);
+        const match = decodeURIComponent(string.replace(/\s/g,"")).match(regex);
         if (match) {
             return match[0];
         } else {
@@ -100,10 +100,10 @@
         }
 
 
-        let urlObj = new URL(decodeURIComponent(window.location.href)); //make sure the url is properly decoded before using it
-        let fragment = urlObj.hash.substring(1); // Remove the '#' at the start
-
-
+        //let urlObj = new URL(decodeURIComponent(window.location.href)); //make sure the url is properly decoded before using it
+        //let fragment = urlObj.hash.substring(1); // Remove the '#' at the start
+        let url = decodeURIComponent(decodeURIComponent(window.location.href))
+        let fragment = url.split("#")[1];
         // Replace non-alphanumeric characters with an empty string to keep only alphanumeric characters
         // if (fragment !== null && ( fragment.indexOf("?") > -1 || fragment.indexOf("&") > -1 ) ) { // Ensure fragment is not null before applying the regex
         //     fragment = fragment.split("?")[0];
@@ -111,7 +111,7 @@
         // }
 
         if (fragment !== null) {
-            fragemnt = decodeURIComponent(fragment);
+            fragment = decodeURIComponent(fragment);
             fragment = extractAffiliateString(decodeURIComponent(fragment));
         }
 
