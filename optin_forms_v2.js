@@ -77,9 +77,16 @@
       }
   }
 
-  function getAffiliateTimestampClick() {
-      var timestamp = affiliateTimestampClick || getTimestampInMicroseconds();
-      return timestamp;
+  function getAffiliateTimestampClick(retries = 0) {
+      const maxRetries = 3;
+      if (!affiliateTimestampClick && retries < maxRetries) {
+          setTimeout(() => {
+              affiliateTimestampClick = getTimestampInMicroseconds();
+              getAffiliateTimestampClick(retries + 1);
+          }, 200);
+          return;
+      }
+      return affiliateTimestampClick
   }
 
   //check if there is already valid stored affiliate data
@@ -278,11 +285,15 @@
       return clientId;
   }
 
-  function getStapeId() {
+  function getStapeId(retries = 0) {
+      const maxRetries = 3;
       var stape_id = getCookieValue("_hmi_stape_id");
+      if (!stape_id && retries < maxRetries) {
+          setTimeout(() => getStapeId(retries + 1), 200);
+          return;
+      }
       return stape_id;
   }
-  
   function getSummitName() {
       return localStorage.getItem("summit_name") || null;
   }
