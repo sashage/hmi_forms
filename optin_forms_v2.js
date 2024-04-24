@@ -472,9 +472,9 @@
 
       var obj = {
           "created_at": getTimestampInMilliseconds(),
-          "stape_id": await getStapeId(),
-          "ga_client_id": await setClientIdCookie(),
-          "ga_session_id": await getSessionID(gaMeasurementId),
+          "stape_id": getStapeId(),
+          "ga_client_id": setClientIdCookie(),
+          "ga_session_id": getSessionID(gaMeasurementId),
           "affiliation": getAffiliation(),
           "page_referrer": getPageReferrer(),
           "last_uid": getLastUserId(),
@@ -490,6 +490,7 @@
           "utm_term": getUtmOrElValues("utm_term"),
           "page_location": getRootDomain(),
       };
+    
       setTimeout(function(){
         var mergedObj = Object.assign({}, affObj, obj);
         return mergedObj;
