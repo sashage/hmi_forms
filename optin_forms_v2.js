@@ -431,13 +431,16 @@
     }
 
     function getTimestampInMilliseconds() {
-        return Date.now() || new Date().getTime();
+        return Date.now() || new Date().getTime() || undefined;
     }
 
     function getTimestampInMicroseconds() {
-        var micros = getTimestampInMilliseconds();
+        var millis = getTimestampInMilliseconds();
         var randomNumber = Math.floor(Math.random() * 1000);
-        return parseInt(micros.toString() + randomNumber.toString());
+        if (millis && randomNumber) {
+            return (millis * 1000) + randomNumber;
+        }
+        return undefined;
     }
 
     function buildTrackingObject() {
