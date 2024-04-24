@@ -78,8 +78,7 @@
   }
 
   function getAffiliateTimestampClick() {
-      var timestamp = affiliateTimestampClick || getTimestampInMicroseconds();
-      return timestamp;
+      return affiliateTimestampClick || getTimestampInMicroseconds();
   }
 
   //check if there is already valid stored affiliate data
