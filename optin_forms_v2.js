@@ -482,6 +482,7 @@
         };
 
         var mergedObj = Object.assign({}, affObj, obj);
+        console.log("obj: ", mergedObj);
         return mergedObj;
 
     }
