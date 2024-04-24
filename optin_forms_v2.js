@@ -450,9 +450,9 @@
         if (affiliate_data && (affiliate_data.affiliate_id || affiliate_data.affiliate_id_full_string)) {      
             affObj.affiliate_id = affiliate_data.affiliate_id;
             affObj.affiliate_id_full_string = affiliate_data.affiliate_id_full_string;
-            affObj.affiliate_timestamp_created = affiliate_data.affiliate_timestamp_created;
-            affObj.affiliate_timestamp_expired = affiliate_data.affiliate_timestamp_expired;
-            affObj.affiliate_timestamp_click = getAffiliateTimestampClick();
+            affObj.affiliate_timestamp_created = affiliate_data.affiliate_timestamp_created + "";
+            affObj.affiliate_timestamp_expired = affiliate_data.affiliate_timestamp_expired + "";
+            affObj.affiliate_timestamp_click = getAffiliateTimestampClick() + "";
             affObj.restored_affiliate_id = affiliate_data.restored_affiliate_id;
             affObj.restored_affiliate_id_full_string = affiliate_data.restored_affiliate_id_full_string;
             affObj.restored_affiliate_timestamp_created = affiliate_data.restored_affiliate_timestamp_created;
