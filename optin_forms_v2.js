@@ -490,9 +490,10 @@
           "utm_term": getUtmOrElValues("utm_term"),
           "page_location": getRootDomain(),
       };
-
-      var mergedObj = Object.assign({}, affObj, obj);
-      return mergedObj;
+      setTimeout(function(){
+        var mergedObj = Object.assign({}, affObj, obj);
+        return mergedObj;
+      },300);
 
   }
 
