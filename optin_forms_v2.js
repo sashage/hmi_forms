@@ -453,7 +453,7 @@
       return undefined;
   }
 
-  function buildTrackingObject() {
+  async function buildTrackingObject() {
 
       var affiliate_data = getAffiliateData();
       affObj = {};
@@ -472,9 +472,9 @@
 
       var obj = {
           "created_at": getTimestampInMilliseconds(),
-          "stape_id": getStapeId(),
-          "ga_client_id": setClientIdCookie(),
-          "ga_session_id": getSessionID(gaMeasurementId),
+          "stape_id": await getStapeId(),
+          "ga_client_id": await setClientIdCookie(),
+          "ga_session_id": await getSessionID(gaMeasurementId),
           "affiliation": getAffiliation(),
           "page_referrer": getPageReferrer(),
           "last_uid": getLastUserId(),
