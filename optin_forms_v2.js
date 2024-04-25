@@ -395,7 +395,7 @@
 
     function getSessionID(gaMeasurementId, retries = 0) {
         const maxRetries = 25;
-        if (retries >= maxRetries) return null;
+        //if (retries >= maxRetries) return null;
 
         try {
             const pattern = new RegExp(`_ga_${gaMeasurementId}=GS\\d\\.\\d\\.(.+?)(?:;|$)`);
@@ -412,7 +412,7 @@
             }
 
             const sessionId = match[1].split(".")[0];
-            if (sessionId && sessionId.length > 4 && isNumber(sessionId) ) {
+            if (sessionId && isNumber(sessionId) ) {
                 return sessionId;
             } else {
                 //setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
