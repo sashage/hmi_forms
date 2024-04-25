@@ -472,7 +472,7 @@
         var storedString = getValueFromWindow(storageKey) || undefined;
         if (storedString) existingObj = JSON.parse(storedString) || {};
     
-        var affiliate_data = getAffiliateData();
+        var affiliate_data = getAffiliateData() || {};
         existingObj = mergeObjects(existingObj, {
             affiliate_id: existingObj["affiliate_id"] || affiliate_data["affiliate_id"] || existingObj["affiliate_id"] || "",
             affiliate_id_full_string: existingObj["affiliate_id_full_string"] || affiliate_data["affiliate_id_full_string"] || existingObj["affiliate_id_full_string"] || undefined,
