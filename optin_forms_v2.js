@@ -443,48 +443,72 @@
         return undefined;
     }
 
-    function buildTrackingObject() {
-
-        var affiliate_data = getAffiliateData();
-        affObj = {};
-        if (affiliate_data && (affiliate_data["affiliate_id"] || affiliate_data["affiliate_id_full_string"])) {      
-            affObj["affiliate_id"] = affiliate_data.affiliate_id + "";
-            affObj["affiliate_id_full_string"] = affiliate_data.affiliate_id_full_string + "";
-            affObj["affiliate_timestamp_created"] = affiliate_data.affiliate_timestamp_created + "";
-            affObj["affiliate_timestamp_expired"] = affiliate_data.affiliate_timestamp_expired + "";
-            affObj["affiliate_timestamp_click"] = getAffiliateTimestampClick() + "";
-            affObj["restored_affiliate_id"] = affiliate_data.restored_affiliate_id + "";
-            affObj["restored_affiliate_id_full_string"] = affiliate_data.restored_affiliate_id_full_string + "";
-            affObj["restored_affiliate_timestamp_created"] = affiliate_data.restored_affiliate_timestamp_created + "";
-            affObj["restored_affiliate_timestamp_expired"] = affiliate_data.restored_affiliate_timestamp_expired + "";
-            affObj["current_affiliate_click_is_attributable"] = affiliate_data.current_affiliate_click_is_attributable + "";
+    // Store and retrieve the value from window variable
+    function storeValueToWindow(key, str) {
+        var encoded = encodeBase64(str);
+        window[key].setItem(key, encoded);
+    }
+    
+    function getValueFromWindow(key) {
+        var encoded = window[key].getItem(key);
+        return encoded ? decodeBase64(encoded) : null;
+    }
+    
+    // Manual object merge function for ES5
+    function mergeObjects(target, source) {
+        for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+                target[key] = source[key];
+            }
         }
+        return target;
+    }
         
-        var obj = {
-            "created_at": getTimestampInMilliseconds() + "",
-            "stape_id": getStapeId() + "",
-            "ga_client_id": setClientIdCookie() + "",
-            "ga_session_id": getSessionID(gaMeasurementId) + "",
-            "affiliation": getAffiliation(),
-            "page_referrer": getPageReferrer(),
-            "last_uid": getLastUserId(),
-            "user_agent": getUserAgent(),
-            "summit_name": getSummitName(),
-            "cookie_fbp": generateFBPCookie(),
-            "cookie_fbc": generateFBCCookie(),
-            "cookie_ttp": getCookieValue("_ttp"),
-            "utm_source": getUtmOrElValues("utm_source"),
-            "utm_medium": getUtmOrElValues("utm_medium"),
-            "utm_campaign": getUtmOrElValues("utm_campaign"),
-            "utm_content": getUtmOrElValues("utm_content"),
-            "utm_term": getUtmOrElValues("utm_term"),
-            "page_location": getRootDomain()
-        };
 
-        var mergedObj = Object.assign({}, affObj, obj);
-        //console.log("obj: ", mergedObj);
-        return mergedObj;
-
+    // Main function to build and update the tracking object
+    function buildTrackingObject() {
+        var storageKey = 'trackingData';
+        var existingObj = JSON.parse(getValueFromWindow(storageKey) || {});
+    
+        var affiliate_data = getAffiliateData();
+        existingObj = mergeObjects(existingObj, {
+            affiliate_id: existingObj["affiliate_id"] || affiliate_data["affiliate_id"] || existingObj["affiliate_id"] || "",
+            affiliate_id_full_string: existingObj["affiliate_id_full_string"] || affiliate_data["affiliate_id_full_string"] || existingObj["affiliate_id_full_string"] || undefined,
+            affiliate_timestamp_created: existingObj["affiliate_timestamp_created"] || affiliate_data["affiliate_timestamp_created"] || existingObj["affiliate_timestamp_created"] || undefined,
+            affiliate_timestamp_expired: existingObj["affiliate_timestamp_expired"] || affiliate_data["affiliate_timestamp_expired"] || existingObj["affiliate_timestamp_expired"] || undefined,
+            affiliate_timestamp_click: existingObj["affiliate_timestamp_click"] || affiliate_data["affiliate_timestamp_expired"] || getAffiliateTimestampClick() || undefined,
+    
+            restored_affiliate_id: existingObj["restored_affiliate_id"] || affiliate_data["restored_affiliate_id"] || existingObj["restored_affiliate_id"] || undefined,
+            restored_affiliate_id_full_string: existingObj["restored_affiliate_id_full_string"] || affiliate_data["restored_affiliate_id_full_string"] || existingObj["restored_affiliate_id_full_string"] || undefined,
+            restored_affiliate_timestamp_created: existingObj["restored_affiliate_timestamp_created"] || affiliate_data["restored_affiliate_timestamp_created"] || existingObj["restored_affiliate_timestamp_created"] || undefined,
+            restored_affiliate_timestamp_expired: existingObj["restored_affiliate_timestamp_expired"] || affiliate_data["restored_affiliate_timestamp_expired"] || existingObj["restored_affiliate_timestamp_expired"] || undefined,
+            current_affiliate_click_is_attributable: existingObj["current_affiliate_click_is_attributable"] || affiliate_data["current_affiliate_click_is_attributable"] || existingObj["current_affiliate_click_is_attributable"] || undefined,
+    
+            created_at: existingObj["created_at"] || getTimestampInMilliseconds().toString() || undefined,
+            stape_id: existingObj["stape_id"] || getStapeId().toString() || undefined,
+            ga_client_id: existingObj["ga_client_id"] || setClientIdCookie().toString() || undefined,
+            ga_session_id: existingObj["ga_session_id"] || getSessionID().toString() || undefined,
+            affiliation: existingObj["affiliation"] || getAffiliation() || undefined,
+            page_referrer: existingObj["page_referrer"] || getPageReferrer() || undefined,
+            last_uid: existingObj["last_uid"] || getLastUserId() || undefined,
+            user_agent: existingObj["user_agent"] || getUserAgent() || undefined,
+            summit_name: existingObj["summit_name"] || getSummitName() || undefined,
+            cookie_fbp: existingObj["cookie_fbp"] || generateFBPCookie() || undefined,
+            cookie_fbc: existingObj["cookie_fbc"] || generateFBCCookie() || undefined,
+            cookie_ttp: existingObj["cookie_ttp"] || getCookieValue("_ttp") || undefined,
+            utm_source: existingObj["utm_source"] || getUtmOrElValues("utm_source") || undefined,
+            utm_medium: existingObj["utm_medium"] || getUtmOrElValues("utm_medium") || undefined,
+            utm_campaign: existingObj["utm_campaign"] || getUtmOrElValues("utm_campaign") || undefined,
+            utm_content: existingObj["utm_content"] || getUtmOrElValues("utm_content") || undefined,
+            utm_term: existingObj["utm_term"] || getUtmOrElValues("utm_term") || undefined,
+            page_location: existingObj["page_location"] || getRootDomain() || undefined
+        
+        });
+        
+        // Store the updated object back into session storage
+        storeObjectInSession(storageKey, JSON.stringify(existingObj));
+    
+        return existingObj;
     }
 
     function fillTrackingTextAreas(json_data) {
