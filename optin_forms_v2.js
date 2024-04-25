@@ -282,7 +282,7 @@
     function getStapeId() {
         var stape_id = getCookieValue("_hmi_stape_id");
         if (stape_id) return stape_id;
-        return null;
+        return undefined;
     }
     function getSummitName() {
         return localStorage.getItem("summit_name") || null;
@@ -488,8 +488,8 @@
     
             created_at: existingObj["created_at"] || getTimestampInMilliseconds() || undefined,
             stape_id: existingObj["stape_id"] || getStapeId() || undefined,
-            ga_client_id: existingObj["ga_client_id"] || setClientIdCookie() || undefined,
-            ga_session_id: existingObj["ga_session_id"] || getSessionID() || undefined,
+            ga_client_id: setClientIdCookie() || undefined,
+            ga_session_id: getSessionID() || undefined,
             affiliation: existingObj["affiliation"] || getAffiliation() || undefined,
             page_referrer: existingObj["page_referrer"] || getPageReferrer() || undefined,
             last_uid: existingObj["last_uid"] || getLastUserId() || undefined,
@@ -659,7 +659,7 @@
 
         setInterval(function(){
             runScriptSingleForm();
-        },3000);
+        },5000);
 
     }
 
