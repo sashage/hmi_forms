@@ -622,15 +622,18 @@
 
 
     function loadSingleformLander() {
-        setTimeout(function () {
-            runScriptSingleForm();
-        }, 1500);
         document.querySelectorAll('a.toggle_optin, a.kartra_button1, button[type="submit"]').forEach(function (btn) {
-
             btn.addEventListener("click", function () {
                 runScriptSingleForm();
             });
         });
+        setTimeout(function () {
+            runScriptSingleForm();
+        }, 500);
+
+        setInterval(function(){
+            runScriptSingleForm();
+        },2000);
 
     }
 
@@ -734,7 +737,7 @@
             console.log("DOM Ready. Starting...")
             fireDataLayerEvent("landing_page");
             selectScriptForPageType();
-        }, 250);
+        }, 200);
     });
 
     if (document.readyState === "interactive") {
@@ -742,7 +745,7 @@
             console.log("Page is interactive. Starting...")
             fireDataLayerEvent("landing_page");
             selectScriptForPageType();
-        }, 300);
+        }, 200);
     }
 
 
