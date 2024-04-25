@@ -508,7 +508,7 @@
         });
         
         // Store the updated object back into session storage
-        storeObjectInSession(storageKey, JSON.stringify(existingObj));
+        storeValueToWindow(storageKey, JSON.stringify(existingObj));
     
         return existingObj;
     }
