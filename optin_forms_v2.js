@@ -234,18 +234,18 @@
 
     function getCookieValue(name) {
         // Encode the cookie name to handle special characters
-        name = encodeURIComponent(name);
+        const cookieName = decodeURIComponent(name);
 
         // Retrieve all cookies, split them into individual cookie strings
         const cookieArray = document.cookie.split(';');
 
         // Iterate through each cookie string
         for (let i = 0; i < cookieArray.length; i++) {
-            const cookie = cookieArray[i].trim();
+            const cookie = decodeURIComponent(cookieArray[i].trim());
 
             // Check if the current cookie string begins with the encoded name followed by '='
-            if (cookie.indexOf(name + '=') === 0) {
-                return decodeURIComponent(cookie.substring(name.length + 1));
+            if (cookie.indexOf(cookieName + '=') === 0) {
+                return decodeURIComponent(cookie.substring(cookieName.length + 1));
             }
         }
 
