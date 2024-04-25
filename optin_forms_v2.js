@@ -9,7 +9,7 @@
     const stepTwoTexts = ["cke_8066"];
 
     let cookies, formType, fields, firstButtonContainers, secondButtonContainers, firstButtonForms, secondButtonForms, modals;
-    let affiliateTimestampClick = getTimestampInMicroseconds();
+    let affiliateTimestampClick;
     let currentAffiliateClickIsAttributable = 1; //by default current affiliate is considered to be the first
     let dataLayerPushes = [];
 
@@ -252,34 +252,32 @@
         // Return an empty string if the cookie with the specified name is not found
         return '';
     }
-
+    
     function setClientIdCookie() {
         var cookieName = "_ga";
-        var expiryDate = new Date() ;
-        var regex = /GA1\.1\.\d{4,}\.\d{4,}/
-        expiryDate.setFullYear(expiryDate.getFullYear() + 2);
-
+        var expiryDate = new Date();
+        expiryDate.setFullYear(expiryDate.getFullYear() + 2); // Setting cookie expiration to 2 years
+    
         var existingCookie = getCookieValue(cookieName);
         var clientIdFromLocalStorage = localStorage.getItem(cookieName);
-
+    
         var clientId = existingCookie || clientIdFromLocalStorage || window._globalClientId || generateClientId();
-
+    
         if (existingCookie !== clientId) {
             var rootDomain = getRootDomain();
-            document.cookie = cookieName + '=' + clientId + '; expires=' + expiryDate.toUTCString() + '; domain=' + rootDomain + '; path=/; SameSite=Lax';
+            document.cookie = `${cookieName}=${clientId}; expires=${expiryDate.toUTCString()}; domain=${rootDomain}; path=/; Secure; HttpOnly; SameSite=Lax`;
         }
-
+    
         if (clientIdFromLocalStorage !== clientId) {
             localStorage.setItem(cookieName, clientId);
         }
-
+    
         if (window._globalClientId !== clientId) {
             window._globalClientId = clientId;
         }
-        
-        if (clientId.match(regex)) return clientId;
-
-        return undefined;
+    
+        if (!/GA1\.1\.\d{4,}\.\d{4,}/.test(clientId)) return undefined;
+        return clientId;
     }
 
     function getStapeId() {
