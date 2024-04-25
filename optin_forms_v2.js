@@ -468,7 +468,8 @@
     // Main function to build and update the tracking object
     function buildTrackingObject() {
         var storageKey = 'trackingData';
-        var existingObj = JSON.parse(getValueFromWindow(storageKey) || {});
+        var storedString = getValueFromWindow(storageKey) || undefined;
+        var existingObj = if (storedString) JSON.parse(storedString) || {};
     
         var affiliate_data = getAffiliateData();
         existingObj = mergeObjects(existingObj, {
