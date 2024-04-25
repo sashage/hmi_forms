@@ -393,7 +393,7 @@
     }
 
 
-    function getSessionID(gaMeasurementId, retries = 0) {
+    function getSessionID(gaMeasurementId=gaMeasurementId, retries = 0) {
         const maxRetries = 25;
         //if (retries >= maxRetries) return null;
 
@@ -494,7 +494,7 @@
             created_at: existingObj["created_at"] || getTimestampInMilliseconds() || undefined,
             stape_id: existingObj["stape_id"] || getStapeId() || undefined,
             ga_client_id: setClientIdCookie() || undefined,
-            ga_session_id: existingObj["ga_session_id"] || getSessionID() || undefined,
+            ga_session_id: existingObj["ga_session_id"] || getSessionID(gaMeasurementId) || undefined,
             affiliation: existingObj["affiliation"] || getAffiliation() || undefined,
             page_referrer: existingObj["page_referrer"] || getPageReferrer() || undefined,
             last_uid: existingObj["last_uid"] || getLastUserId() || undefined,
