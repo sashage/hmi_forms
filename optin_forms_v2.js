@@ -292,6 +292,11 @@
         return localStorage.getItem('affiliation');
     }
 
+    function isNumber(value) {
+      var regex = /\d+/;
+      return value.match(regex)
+    }
+
     //Function get last user id
     function getLastUserId() {
         var storedUserInfo = localStorage.getItem('_ud');
@@ -396,25 +401,25 @@
             const pattern = new RegExp(`_ga_${gaMeasurementId}=GS\\d\\.\\d\\.(.+?)(?:;|$)`);
             const cookie = document.cookie;
             if (!cookie) {
-                setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
+                //setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
                 return;
             }
 
             const match = cookie.match(pattern);
             if (!match) {
-                setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
+                //setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
                 return;
             }
 
             const sessionId = match[1].split(".")[0];
-            if (sessionId) {
+            if (sessionId && sessionId.length > 4 && isNumber(sessionId) ) {
                 return sessionId;
             } else {
-                setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
+                //setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
             }
         } catch (error) {
             console.error('Error retrieving GA4 session ID:', error);
-            setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
+            //setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
         }
 
         return null;
@@ -489,7 +494,7 @@
             created_at: existingObj["created_at"] || getTimestampInMilliseconds() || undefined,
             stape_id: existingObj["stape_id"] || getStapeId() || undefined,
             ga_client_id: setClientIdCookie() || undefined,
-            ga_session_id: getSessionID() || undefined,
+            ga_session_id: existingObj["ga_session_id"] || getSessionID() || undefined,
             affiliation: existingObj["affiliation"] || getAffiliation() || undefined,
             page_referrer: existingObj["page_referrer"] || getPageReferrer() || undefined,
             last_uid: existingObj["last_uid"] || getLastUserId() || undefined,
