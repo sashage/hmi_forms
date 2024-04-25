@@ -633,7 +633,7 @@
 
         setInterval(function(){
             runScriptSingleForm();
-        },2000);
+        },3000);
 
     }
 
