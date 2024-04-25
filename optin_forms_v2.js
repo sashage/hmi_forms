@@ -255,7 +255,8 @@
 
     function setClientIdCookie() {
         var cookieName = "_ga";
-        var expiryDate = new Date();
+        var expiryDate = new Date() ;
+        var regex = /GA1\.1\.\d{4,}\.\d{4,}/
         expiryDate.setFullYear(expiryDate.getFullYear() + 2);
 
         var existingCookie = getCookieValue(cookieName);
@@ -275,8 +276,10 @@
         if (window._globalClientId !== clientId) {
             window._globalClientId = clientId;
         }
+        
+        if (clientId.match(regex)) return clientId;
 
-        return clientId;
+        return undefined;
     }
 
     function getStapeId() {
@@ -493,7 +496,7 @@
     
             created_at: existingObj["created_at"] || getTimestampInMilliseconds() || undefined,
             stape_id: existingObj["stape_id"] || getStapeId() || undefined,
-            ga_client_id: setClientIdCookie() || undefined,
+            ga_client_id: existingObj["ga_client_id"] || setClientIdCookie() || undefined,
             ga_session_id: existingObj["ga_session_id"] || getSessionID(gaMeasurementId) || undefined,
             affiliation: existingObj["affiliation"] || getAffiliation() || undefined,
             page_referrer: existingObj["page_referrer"] || getPageReferrer() || undefined,
