@@ -446,11 +446,11 @@
     // Store and retrieve the value from window variable
     function storeValueToWindow(key, str) {
         var encoded = encodeBase64(str);
-        window[key].setItem(key, encoded);
+        window[key] = encoded;
     }
     
     function getValueFromWindow(key) {
-        var encoded = window[key].getItem(key);
+        var encoded = window[key];
         return encoded ? decodeBase64(encoded) : null;
     }
     
