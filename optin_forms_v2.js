@@ -14,66 +14,86 @@
     let dataLayerPushes = [];
 
     function getRootDomain() {
-        // Define a regex pattern to match against the hostname
-        var regex = /([a-zA-Z0-9-]+\.)*([a-zA-Z0-9-]+\.[a-zA-Z]{2,4})$/;
+        try {
+            try {
+                // Define a regex pattern to match against the hostname
+                var regex = /([a-zA-Z0-9-]+\.)*([a-zA-Z0-9-]+\.[a-zA-Z]{2,4})$/;
 
-        // Attempt to extract the domain using window.location.hostname
-        var hostname = window.location.hostname;
-        var match = hostname.match(regex);
-        if (match) {
-            return match[2];
-        }
+                // Attempt to extract the domain using window.location.hostname
+                var hostname = window.location.hostname;
+                var match = hostname.match(regex);
+                if (match) {
+                    return match[2];
+                }
 
-        // Fallback 1: Using window.location.host (includes port numbers if present)
-        var host = window.location.host;
-        match = host.match(regex);
-        if (match) {
-            return match[2];
-        }
+                // Fallback 1: Using window.location.host (includes port numbers if present)
+                var host = window.location.host;
+                match = host.match(regex);
+                if (match) {
+                    return match[2];
+                }
 
-        // Fallback 2: Using window.location.origin (scheme + hostname + port)
-        var origin = new URL(window.location.origin);
-        match = origin.hostname.match(regex);
-        if (match) {
-            return match[2];
-        }
+                // Fallback 2: Using window.location.origin (scheme + hostname + port)
+                var origin = new URL(window.location.origin);
+                match = origin.hostname.match(regex);
+                if (match) {
+                    return match[2];
+                }
 
-        // Fallback 3: Direct extraction from window.location.href
-        var href = new URL(window.location.href);
-        match = href.hostname.match(regex);
-        if (match) {
-            return match[2];
-        }
+                // Fallback 3: Direct extraction from window.location.href
+                var href = new URL(window.location.href);
+                match = href.hostname.match(regex);
+                if (match) {
+                    return match[2];
+                }
 
-        // Further Fallback: Parsing the hostname directly for simpler cases
-        var parts = hostname.split('.');
-        var partCount = parts.length;
-        if (partCount > 1) {
-            return parts[partCount - 2] + '.' + parts[partCount - 1];
-        } else {
-            // Last resort: return the hostname itself
-            return hostname;
+                // Further Fallback: Parsing the hostname directly for simpler cases
+                var parts = hostname.split('.');
+                var partCount = parts.length;
+                if (partCount > 1) {
+                    return parts[partCount - 2] + '.' + parts[partCount - 1];
+                } else {
+                    // Last resort: return the hostname itself
+                    return hostname;
+                }
+            } catch (error) {
+                console.error("Error 009: Failed to get root domain", error);
+            }
+        } catch (error) {
+            console.error("Error 001: Failed to get root domain", error);
         }
     }
 
 
     function encodeBase64(string) {
-        var b64 = window.btoa(encodeURIComponent(string))
-        return b64;
+        try {
+            var b64 = window.btoa(encodeURIComponent(string))
+            return b64;
+        } catch (error) {
+            console.error("Error 002: Failed to encode base64", error);
+        }
     }
 
     function decodeBase64(b64) {
-        var string = decodeURIComponent(window.atob(b64))
-        return string;
+        try {
+            var string = decodeURIComponent(window.atob(b64))
+            return string;
+        } catch (error) {
+            console.error("Error 003: Failed to decode base64", error);
+        }
     }
 
     function extractAffiliateString(string) {
-        const regex = /a_aid=[a-zA-Z0-9_-]+/;
-        const match = decodeURIComponent(string.replace(/\s/g,"")).match(regex);
-        if (match) {
-            return match[0];
-        } else {
-            return string; // return original string if not matched
+        try {
+            const regex = /a_aid=[a-zA-Z0-9_-]+/;
+            const match = decodeURIComponent(string.replace(/\s/g, "")).match(regex);
+            if (match) {
+                return match[0];
+            } else {
+                return string; // return original string if not matched
+            }
+        } catch (error) {
+            console.error("Error 004: Failed to extract affiliate string", error);
         }
     }
 
@@ -84,85 +104,89 @@
 
     //check if there is already valid stored affiliate data
     function getAffiliateData() {
-        
-        getAffiliateTimestampClick();
-        
-        let stored_data = getAffiliateStorage()
-        if (stored_data && !stored_data["is_stored_affiliate_id"]) return stored_data; //only return affiliate data if not read from affiliate storage
+        try {
 
-        let json_data = {};
-        if (stored_data && stored_data["is_stored_affiliate_id"]) {
-            currentAffiliateClickIsAttributable = 0 //previous affiliate_id was detected
-            json_data.restored_affiliate_id_full_string = stored_data.affiliate_id_full_string;
-            json_data.restored_affiliate_id = stored_data.affiliate_id;
-            json_data.restored_affiliate_timestamp_created = stored_data.affiliate_timestamp_created;
-            json_data.restored_affiliate_timestamp_expired = stored_data.affiliate_timestamp_expired;
-        }
+            getAffiliateTimestampClick();
 
+            let stored_data = getAffiliateStorage()
+            if (stored_data && !stored_data["is_stored_affiliate_id"]) return stored_data; //only return affiliate data if not read from affiliate storage
 
-        //let urlObj = new URL(decodeURIComponent(window.location.href)); //make sure the url is properly decoded before using it
-        //let fragment = urlObj.hash.substring(1); // Remove the '#' at the start
-        let url = decodeURIComponent(decodeURIComponent(window.location.href))
-        let fragment = url.split("#")[1];
-        // Replace non-alphanumeric characters with an empty string to keep only alphanumeric characters
-        // if (fragment !== null && ( fragment.indexOf("?") > -1 || fragment.indexOf("&") > -1 ) ) { // Ensure fragment is not null before applying the regex
-        //     fragment = fragment.split("?")[0];
-        //     fragment = fragment.split("&")[0];
-        // }
-
-        if (fragment !== null) {
-            fragment = decodeURIComponent(fragment);
-            fragment = extractAffiliateString(decodeURIComponent(fragment));
-        }
-
-        if (fragment.indexOf("a_aid") > -1) {
-            json_data.affiliate_id_full_string = fragment;
-            
-            //let params = new URLSearchParams(fragment);
-            //let hmi_aaid = params.get('a_aid'); //default PAP Affiliare ID from URL
-            let hmi_aaid = fragment.replace(/\s+/g, "").split("=")[1].trim();
-            
-            const now = new Date();
-            const expirationTimestamp = new Date(now.setDate(now.getDate() + 60)).getTime();
-
-            json_data.affiliate_id = hmi_aaid;
-            json_data.affiliate_timestamp_created = new Date().getTime();
-            json_data.affiliate_timestamp_expired = expirationTimestamp;
-            json_data.affiliate_timestamp_click = getAffiliateTimestampClick();
-            json_data.current_affiliate_click_is_attributable = currentAffiliateClickIsAttributable;
-
-
-            fireDataLayerEvent("affiliate_click", json_data
-                // {
-                // 	"affiliate_id": hmi_aaid,
-                // 	"affiliate_id_full_string": fragment,
-                // 	"affiliate_timestamp_click": getAffiliateTimestampClick();,
-                // 	"currentAffiliateClickIsAttributable": currentAffiliateClickIsAttributable || undefined
-                // }
-            );
-
-            //store affiliate data
-            localStorage.setItem('affiliation', 'affiliate');
-
-            //store affiliate_date to session storage. Will be copied to local storage after optin
-
-            if (currentAffiliateClickIsAttributable && currentAffiliateClickIsAttributable == 1) { //only set sessionStorage if current affiliate is attributable
-                var session_json_data = json_data;
-                delete session_json_data.restored_affiliate_id_full_string;
-                delete session_json_data.restored_affiliate_id;
-                delete session_json_data.restored_affiliate_timestamp_created;
-                delete session_json_data.restored_affiliate_timestamp_expired;
-                delete session_json_data.current_affiliate_click_is_attributable;
-                sessionStorage.setItem(AFFILIATE_STORAGE_KEY, encodeBase64(JSON.stringify(session_json_data)));
+            let json_data = {};
+            if (stored_data && stored_data["is_stored_affiliate_id"]) {
+                currentAffiliateClickIsAttributable = 0 //previous affiliate_id was detected
+                json_data.restored_affiliate_id_full_string = stored_data.affiliate_id_full_string;
+                json_data.restored_affiliate_id = stored_data.affiliate_id;
+                json_data.restored_affiliate_timestamp_created = stored_data.affiliate_timestamp_created;
+                json_data.restored_affiliate_timestamp_expired = stored_data.affiliate_timestamp_expired;
             }
 
-            return json_data;
 
-        } else {
-            localStorage.setItem('affiliation', window.affiliation);
+            //let urlObj = new URL(decodeURIComponent(window.location.href)); //make sure the url is properly decoded before using it
+            //let fragment = urlObj.hash.substring(1); // Remove the '#' at the start
+            let url = decodeURIComponent(decodeURIComponent(window.location.href))
+            let fragment = url.split("#")[1];
+            // Replace non-alphanumeric characters with an empty string to keep only alphanumeric characters
+            // if (fragment !== null && ( fragment.indexOf("?") > -1 || fragment.indexOf("&") > -1 ) ) { // Ensure fragment is not null before applying the regex
+            //     fragment = fragment.split("?")[0];
+            //     fragment = fragment.split("&")[0];
+            // }
+
+            if (fragment !== null) {
+                fragment = decodeURIComponent(fragment);
+                fragment = extractAffiliateString(decodeURIComponent(fragment));
+            }
+
+            if (fragment.indexOf("a_aid") > -1) {
+                json_data.affiliate_id_full_string = fragment;
+
+                //let params = new URLSearchParams(fragment);
+                //let hmi_aaid = params.get('a_aid'); //default PAP Affiliare ID from URL
+                let hmi_aaid = fragment.replace(/\s+/g, "").split("=")[1].trim();
+
+                const now = new Date();
+                const expirationTimestamp = new Date(now.setDate(now.getDate() + 60)).getTime();
+
+                json_data.affiliate_id = hmi_aaid;
+                json_data.affiliate_timestamp_created = new Date().getTime();
+                json_data.affiliate_timestamp_expired = expirationTimestamp;
+                json_data.affiliate_timestamp_click = getAffiliateTimestampClick();
+                json_data.current_affiliate_click_is_attributable = currentAffiliateClickIsAttributable;
+
+
+                fireDataLayerEvent("affiliate_click", json_data
+                    // {
+                    // 	"affiliate_id": hmi_aaid,
+                    // 	"affiliate_id_full_string": fragment,
+                    // 	"affiliate_timestamp_click": getAffiliateTimestampClick();,
+                    // 	"currentAffiliateClickIsAttributable": currentAffiliateClickIsAttributable || undefined
+                    // }
+                );
+
+                //store affiliate data
+                localStorage.setItem('affiliation', 'affiliate');
+
+                //store affiliate_date to session storage. Will be copied to local storage after optin
+
+                if (currentAffiliateClickIsAttributable && currentAffiliateClickIsAttributable == 1) { //only set sessionStorage if current affiliate is attributable
+                    var session_json_data = json_data;
+                    delete session_json_data.restored_affiliate_id_full_string;
+                    delete session_json_data.restored_affiliate_id;
+                    delete session_json_data.restored_affiliate_timestamp_created;
+                    delete session_json_data.restored_affiliate_timestamp_expired;
+                    delete session_json_data.current_affiliate_click_is_attributable;
+                    sessionStorage.setItem(AFFILIATE_STORAGE_KEY, encodeBase64(JSON.stringify(session_json_data)));
+                }
+
+                return json_data;
+
+            } else {
+                localStorage.setItem('affiliation', window.affiliation);
+            }
+
+            return null;
+        } catch (error) {
+            console.error("Error 005: Failed to get affiliate storage", error);
         }
-
-        return null;
 
     }
 
@@ -220,64 +244,80 @@
 
 
     function isValueExpired(timestamp) {
-        if (!timestamp) return true;
+        try {
+            if (!timestamp) return true;
 
-        const now = Date.now();
-        return now > parseInt(timestamp, 10);
+            const now = Date.now();
+            return now > parseInt(timestamp, 10);
+        } catch (error) {
+            console.error("Error 007: Failed to check if value is expired", error);
+        }
     }
 
     function generateClientId() {
-        var timestampMillis = new Date().getTime();
-        var randomNumber = Math.floor(Math.random() * 1000000000);
-        return 'GA1.1.' + randomNumber + '.' + timestampMillis;
+        try {
+            var timestampMillis = new Date().getTime();
+            var randomNumber = Math.floor(Math.random() * 1000000000);
+            return 'GA1.1.' + randomNumber + '.' + timestampMillis;
+        } catch (error) {
+            console.error("Error 008: Failed to generate client ID", error);
+        }
     }
 
     function getCookieValue(name) {
-        // Encode the cookie name to handle special characters
-        const cookieName = decodeURIComponent(name);
+        try {
+            // Encode the cookie name to handle special characters
+            const cookieName = decodeURIComponent(name);
 
-        // Retrieve all cookies, split them into individual cookie strings
-        const cookieArray = document.cookie.split(';');
+            // Retrieve all cookies, split them into individual cookie strings
+            const cookieArray = document.cookie.split(';');
 
-        // Iterate through each cookie string
-        for (let i = 0; i < cookieArray.length; i++) {
-            const cookie = decodeURIComponent(cookieArray[i].trim());
+            // Iterate through each cookie string
+            for (let i = 0; i < cookieArray.length; i++) {
+                const cookie = decodeURIComponent(cookieArray[i].trim());
 
-            // Check if the current cookie string begins with the encoded name followed by '='
-            if (cookie.indexOf(cookieName + '=') === 0) {
-                return decodeURIComponent(cookie.substring(cookieName.length + 1));
+                // Check if the current cookie string begins with the encoded name followed by '='
+                if (cookie.indexOf(cookieName + '=') === 0) {
+                    return decodeURIComponent(cookie.substring(cookieName.length + 1));
+                }
             }
-        }
 
-        // Return an empty string if the cookie with the specified name is not found
-        return '';
+            // Return an empty string if the cookie with the specified name is not found
+            return '';
+        } catch (error) {
+            console.error("Error 010: Failed to get cookie value", error);
+        }
     }
-    
+
     function setClientIdCookie() {
-        var cookieName = "_ga";
-        var expiryDate = new Date();
-        expiryDate.setFullYear(expiryDate.getFullYear() + 2); // Setting cookie expiration to 2 years
-    
-        var existingCookie = getCookieValue(cookieName);
-        var clientIdFromLocalStorage = localStorage.getItem(cookieName);
-    
-        var clientId = existingCookie || clientIdFromLocalStorage || window._globalClientId || generateClientId();
-    
-        if (existingCookie !== clientId) {
-            var rootDomain = getRootDomain();
-            document.cookie = `${cookieName}=${clientId}; expires=${expiryDate.toUTCString()}; domain=${rootDomain}; path=/; Secure; HttpOnly; SameSite=Lax`;
+        try {
+            var cookieName = "_ga";
+            var expiryDate = new Date();
+            expiryDate.setFullYear(expiryDate.getFullYear() + 2); // Setting cookie expiration to 2 years
+
+            var existingCookie = getCookieValue(cookieName);
+            var clientIdFromLocalStorage = localStorage.getItem(cookieName);
+
+            var clientId = existingCookie || clientIdFromLocalStorage || window._globalClientId || generateClientId();
+
+            if (existingCookie !== clientId) {
+                var rootDomain = getRootDomain();
+                document.cookie = `${cookieName}=${clientId}; expires=${expiryDate.toUTCString()}; domain=${rootDomain}; path=/; Secure; HttpOnly; SameSite=Lax`;
+            }
+
+            if (clientIdFromLocalStorage !== clientId) {
+                localStorage.setItem(cookieName, clientId);
+            }
+
+            if (window._globalClientId !== clientId) {
+                window._globalClientId = clientId;
+            }
+
+            if (!/GA1\.1\.\d{4,}\.\d{4,}/.test(clientId)) return undefined;
+            return clientId;
+        } catch (error) {
+            console.error("Error 011: Failed to set client ID cookie", error);
         }
-    
-        if (clientIdFromLocalStorage !== clientId) {
-            localStorage.setItem(cookieName, clientId);
-        }
-    
-        if (window._globalClientId !== clientId) {
-            window._globalClientId = clientId;
-        }
-    
-        if (!/GA1\.1\.\d{4,}\.\d{4,}/.test(clientId)) return undefined;
-        return clientId;
     }
 
     function getStapeId() {
@@ -286,29 +326,44 @@
         return undefined;
     }
     function getSummitName() {
-        return localStorage.getItem("summit_name") || null;
+        return localStorage.getItem("summit_name") || undefined;
     }
 
     function getAffiliation() {
         return localStorage.getItem('affiliation');
     }
 
+
     function isNumber(value) {
-      var regex = /\d+/;
-      return value.match(regex)
+
+        try {
+            var regex = /\d+/;
+            return value.match(regex);
+        } catch (error) {
+            console.error("Error 014: Failed to check if value is a number", error);
+            return false;
+        }
+
     }
 
     //Function get last user id
     function getLastUserId() {
         var storedUserInfo = localStorage.getItem('_ud');
-        var userInfo = storedUserInfo ? JSON.parse(decodeBase64(storedUserInfo)) : {};
-        var emailQueryParameter = extractEmailFromURL();
-        if (emailQueryParameter) {
-            userInfo.user_id = window.btoa(emailQueryParameter.toLowerCase());
-            window.localStorage.setItem("_ud", encodeBase64(JSON.stringify(userInfo)));
-            return window.btoa(emailQueryParameter);
-        } else if (userInfo && userInfo.user_id) {
-            return userInfo.user_id;
+        var userInfo;
+        if (storedUserInfo) {
+            try {
+                JSON.parse(decodeBase64(storedUserInfo));
+            } catch (e) {
+                console.error("", e)
+            }
+            var emailQueryParameter = extractEmailFromURL();
+            if (emailQueryParameter) {
+                userInfo.user_id = window.btoa(emailQueryParameter.toLowerCase());
+                window.localStorage.setItem("_ud", encodeBase64(JSON.stringify(userInfo)));
+                return window.btoa(emailQueryParameter);
+            } else if (userInfo && userInfo.user_id) {
+                return userInfo.user_id;
+            }
         }
     }
 
@@ -332,69 +387,83 @@
     }
 
     function generateFBCCookie() {
-        let cookie_fbc = getCookieValue("_fbc") || null;
-        if (cookie_fbc) {
-            cookie_fbc = cookie_fbc;
-        } else {
-            const fbclid = getUrlParameter('fbclid') || undefined;
-            if (fbclid) {
-                const creationTime = new Date().getTime();
-                const fbcValue = `fb.1.${creationTime}.${fbclid}`;
-                const cookieName = "_fbc";
-                let expiryDate = new Date();
-                expiryDate.setFullYear(expiryDate.getFullYear() + 2);
-                const rootDomain = getRootDomain();
-                document.cookie = cookieName + '=' + fbcValue + '; expires=' + expiryDate.toUTCString() + '; domain=' + rootDomain + '; path=/; SameSite=Lax';
-                cookie_fbc = fbcValue;
+        try {
+            let cookie_fbc = getCookieValue("_fbc") || null;
+            if (!cookie_fbc) {
+                const fbclid = getUrlParameter('fbclid') || undefined;
+                if (fbclid) {
+                    const creationTime = new Date().getTime();
+                    const fbcValue = `fb.1.${creationTime}.${fbclid}`;
+                    const cookieName = "_fbc";
+                    let expiryDate = new Date();
+                    expiryDate.setFullYear(expiryDate.getFullYear() + 2);
+                    const rootDomain = getRootDomain();
+                    document.cookie = cookieName + '=' + fbcValue + '; expires=' + expiryDate.toUTCString() + '; domain=' + rootDomain + '; path=/; SameSite=Lax';
+                    cookie_fbc = fbcValue;
+                }
             }
+            return cookie_fbc;
+        } catch (error) {
+            console.error("Error 013: Failed to generate or retrieve _fbc cookie", error);
         }
-        return cookie_fbc;
     }
 
 
     function generateFBPCookie() {
-        let cookie_fbp = getCookieValue("_fbp") || null;
-        if (!cookie_fbp) {
-            const version = "fb";
-            const subdomainIndex = "1";
-            const creationTime = new Date().getTime();
-            const randomNumber = Math.floor(Math.random() * (9999999999 - 1000000000 + 1)) + 1000000000;
-            cookie_fbp = `${version}.${subdomainIndex}.${creationTime}.${randomNumber}`;
-            const cookieName = "_fbp";
-            let expiryDate = new Date();
-            expiryDate.setFullYear(expiryDate.getFullYear() + 2);
-            const rootDomain = getRootDomain();
-            document.cookie = cookieName + '=' + cookie_fbp + '; expires=' + expiryDate.toUTCString() + '; domain=' + rootDomain + '; path=/; SameSite=Lax';
+        try {
+            let cookie_fbp = getCookieValue("_fbp") || null;
+            if (!cookie_fbp) {
+                const version = "fb";
+                const subdomainIndex = "1";
+                const creationTime = new Date().getTime();
+                const randomNumber = Math.floor(Math.random() * (9999999999 - 1000000000 + 1)) + 1000000000;
+                cookie_fbp = `${version}.${subdomainIndex}.${creationTime}.${randomNumber}`;
+                const cookieName = "_fbp";
+                let expiryDate = new Date();
+                expiryDate.setFullYear(expiryDate.getFullYear() + 2);
+                const rootDomain = getRootDomain();
+                document.cookie = cookieName + '=' + cookie_fbp + '; expires=' + expiryDate.toUTCString() + '; domain=' + rootDomain + '; path=/; SameSite=Lax';
+            }
+            return cookie_fbp;
+        } catch (error) {
+            console.error("Error 014: Failed to generate or retrieve _fbc cookie", error);
         }
-        return cookie_fbp;
     }
 
 
     function getUrlParameter(name) {
-        const regex = new RegExp(`[\\?&]${name}=([^&#]*)`);
-        const results = regex.exec(location.search);
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        try {
+            const regex = new RegExp(`[\\?&]${name}=([^&#]*)`);
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        } catch (error) {
+            console.error("Error 015: Failed to get URL parameters ", error);
+        }
     }
 
     function getUtmOrElValues(name) {
-        const utmNames = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
-        if (utmNames.includes(name)) {
-            const utmValue = getUrlParameter(name);
-            if (utmValue) {
-                return utmValue;
-            } else if (name === 'utm_source' && getUrlParameter('el')) {
-                return 'kartra';
-            } else if (name === 'utm_medium' && getUrlParameter('el')) {
-                return 'email';
-            } else if (name === 'utm_campaign' && getUrlParameter('el')) {
-                return getUrlParameter('el');
+        try {
+            const utmNames = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+            if (utmNames.includes(name)) {
+                const utmValue = getUrlParameter(name);
+                if (utmValue) {
+                    return utmValue;
+                } else if (name === 'utm_source' && getUrlParameter('el')) {
+                    return 'kartra';
+                } else if (name === 'utm_medium' && getUrlParameter('el')) {
+                    return 'email';
+                } else if (name === 'utm_campaign' && getUrlParameter('el')) {
+                    return getUrlParameter('el');
+                }
             }
+            return getUrlParameter(name);
+        } catch (error) {
+            console.error("Error 016: Failed to to get URL parameters", error);
         }
-        return getUrlParameter(name);
     }
 
 
-    function getSessionID(gaMeasurementId=gaMeasurementId, retries = 0) {
+    function getSessionID(gaMeasurementId = gaMeasurementId, retries = 0) {
         const maxRetries = 25;
         //if (retries >= maxRetries) return null;
 
@@ -413,13 +482,13 @@
             }
 
             const sessionId = match[1].split(".")[0];
-            if (sessionId && isNumber(sessionId) ) {
+            if (sessionId && isNumber(sessionId)) {
                 return sessionId;
             } else {
                 //setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
             }
         } catch (error) {
-            console.error('Error retrieving GA4 session ID:', error);
+            console.error('Error 017: Error retrieving GA4 session ID:', error);
             //setTimeout(() => getSessionID(gaMeasurementId, retries + 1), 500);
         }
 
@@ -427,105 +496,141 @@
     }
 
     function parseCookies(cookieString) {
-        const cookieArray = cookieString.split("; ");
-        const cookieObj = {};
-        cookieArray.forEach(cookie => {
-            const [key, value] = cookie.split("=");
-            cookieObj[key] = value;
-        });
-        return cookieObj;
+        try {
+            const cookieArray = cookieString.split("; ");
+            const cookieObj = {};
+            cookieArray.forEach(cookie => {
+                const [key, value] = cookie.split("=");
+                cookieObj[key] = value;
+            });
+            return cookieObj;
+        } catch (error) {
+            console.error("Error 018: Failed to parse cookie", error);
+        }
     }
 
     function getTimestampInMilliseconds() {
-        return Date.now() || new Date().getTime() || undefined;
+        try {
+            return Date.now() || new Date().getTime();
+        } catch (error) {
+            console.error("Error 019: Failed to get timestamp", error);
+        }
     }
 
     function getTimestampInMicroseconds() {
-        var millis = getTimestampInMilliseconds();
-        var randomNumber = Math.floor(Math.random() * 1000);
-        if (millis && randomNumber) {
-            return (millis * 1000) + randomNumber;
+        try {
+            var millis = getTimestampInMilliseconds();
+            var randomNumber = Math.floor(Math.random() * 1000);
+            if (millis && randomNumber) {
+                return (millis * 1000) + randomNumber;
+            }
+            return undefined;
+        } catch (error) {
+            console.error("Error 020: Failed to get timestamp", error);
         }
-        return undefined;
     }
 
     // Store and retrieve the value from window variable
     function storeValueToWindow(key, str) {
-        var encoded = encodeBase64(str);
-        window[key] = encoded;
+        try {
+            var encoded = encodeBase64(str);
+            window[key] = encoded;
+        } catch (error) {
+            console.error("Error 021: Failed to store to window", error);
+        }
     }
-    
+
     function getValueFromWindow(key) {
-        var encoded = window[key];
-        return encoded ? decodeBase64(encoded) : null;
+        try {
+            var encoded = window[key];
+            return encoded ? decodeBase64(encoded) : null;
+        } catch (error) {
+            console.error("Error 022: Failed to read from window", error);
+        }
     }
-    
+
     // Manual object merge function for ES5
     function mergeObjects(target, source) {
-        for (var key in source) {
-            if (source.hasOwnProperty(key)) {
-                target[key] = source[key];
+        try {
+            for (var key in source) {
+                if (source.hasOwnProperty(key)) {
+                    target[key] = source[key];
+                }
             }
+            return target;
+        } catch (error) {
+            console.error("Error 023: Failed to merge objects", error);
         }
-        return target;
     }
-        
+
 
     // Main function to build and update the tracking object
     function buildTrackingObject() {
         var storageKey = 'trackingData';
         var existingObj = {};
         var storedString = getValueFromWindow(storageKey) || undefined;
-        if (storedString) existingObj = JSON.parse(storedString) || {};
-    
-        var affiliate_data = getAffiliateData() || {};
-        existingObj = mergeObjects(existingObj, {
-            affiliate_id: existingObj["affiliate_id"] || affiliate_data["affiliate_id"] || existingObj["affiliate_id"] || "",
-            affiliate_id_full_string: existingObj["affiliate_id_full_string"] || affiliate_data["affiliate_id_full_string"] || existingObj["affiliate_id_full_string"] || undefined,
-            affiliate_timestamp_created: existingObj["affiliate_timestamp_created"] || affiliate_data["affiliate_timestamp_created"] || existingObj["affiliate_timestamp_created"] || undefined,
-            affiliate_timestamp_expired: existingObj["affiliate_timestamp_expired"] || affiliate_data["affiliate_timestamp_expired"] || existingObj["affiliate_timestamp_expired"] || undefined,
-            affiliate_timestamp_click: existingObj["affiliate_timestamp_click"] || affiliate_data["affiliate_timestamp_expired"] || getAffiliateTimestampClick() || undefined,
-    
-            restored_affiliate_id: existingObj["restored_affiliate_id"] || affiliate_data["restored_affiliate_id"] || existingObj["restored_affiliate_id"] || undefined,
-            restored_affiliate_id_full_string: existingObj["restored_affiliate_id_full_string"] || affiliate_data["restored_affiliate_id_full_string"] || existingObj["restored_affiliate_id_full_string"] || undefined,
-            restored_affiliate_timestamp_created: existingObj["restored_affiliate_timestamp_created"] || affiliate_data["restored_affiliate_timestamp_created"] || existingObj["restored_affiliate_timestamp_created"] || undefined,
-            restored_affiliate_timestamp_expired: existingObj["restored_affiliate_timestamp_expired"] || affiliate_data["restored_affiliate_timestamp_expired"] || existingObj["restored_affiliate_timestamp_expired"] || undefined,
-            current_affiliate_click_is_attributable: existingObj["current_affiliate_click_is_attributable"] || affiliate_data["current_affiliate_click_is_attributable"] || existingObj["current_affiliate_click_is_attributable"] || undefined,
-    
-            created_at: existingObj["created_at"] || getTimestampInMilliseconds() || undefined,
-            stape_id: existingObj["stape_id"] || getStapeId() || undefined,
-            ga_client_id: existingObj["ga_client_id"] || setClientIdCookie() || undefined,
-            ga_session_id: existingObj["ga_session_id"] || getSessionID(gaMeasurementId) || undefined,
-            affiliation: existingObj["affiliation"] || getAffiliation() || undefined,
-            page_referrer: existingObj["page_referrer"] || getPageReferrer() || undefined,
-            last_uid: existingObj["last_uid"] || getLastUserId() || undefined,
-            user_agent: existingObj["user_agent"] || getUserAgent() || undefined,
-            summit_name: existingObj["summit_name"] || getSummitName() || undefined,
-            cookie_fbp: existingObj["cookie_fbp"] || generateFBPCookie() || undefined,
-            cookie_fbc: existingObj["cookie_fbc"] || generateFBCCookie() || undefined,
-            cookie_ttp: existingObj["cookie_ttp"] || getCookieValue("_ttp") || undefined,
-            utm_source: existingObj["utm_source"] || getUtmOrElValues("utm_source") || undefined,
-            utm_medium: existingObj["utm_medium"] || getUtmOrElValues("utm_medium") || undefined,
-            utm_campaign: existingObj["utm_campaign"] || getUtmOrElValues("utm_campaign") || undefined,
-            utm_content: existingObj["utm_content"] || getUtmOrElValues("utm_content") || undefined,
-            utm_term: existingObj["utm_term"] || getUtmOrElValues("utm_term") || undefined,
-            page_location: existingObj["page_location"] || getRootDomain() || undefined
-        
-        });
-        
+        try {
+            if (storedString) existingObj = JSON.parse(storedString) || {};
+        } catch (error) {
+            console.error("Error 024: Failed to parse string", error);
+        }
+
+        try {
+            var affiliate_data = getAffiliateData() || {};
+            existingObj = mergeObjects(existingObj, {
+                affiliate_id: existingObj["affiliate_id"] || affiliate_data["affiliate_id"] || existingObj["affiliate_id"] || "",
+                affiliate_id_full_string: existingObj["affiliate_id_full_string"] || affiliate_data["affiliate_id_full_string"] || existingObj["affiliate_id_full_string"] || undefined,
+                affiliate_timestamp_created: existingObj["affiliate_timestamp_created"] || affiliate_data["affiliate_timestamp_created"] || existingObj["affiliate_timestamp_created"] || undefined,
+                affiliate_timestamp_expired: existingObj["affiliate_timestamp_expired"] || affiliate_data["affiliate_timestamp_expired"] || existingObj["affiliate_timestamp_expired"] || undefined,
+                affiliate_timestamp_click: existingObj["affiliate_timestamp_click"] || affiliate_data["affiliate_timestamp_expired"] || getAffiliateTimestampClick() || undefined,
+
+                restored_affiliate_id: existingObj["restored_affiliate_id"] || affiliate_data["restored_affiliate_id"] || existingObj["restored_affiliate_id"] || undefined,
+                restored_affiliate_id_full_string: existingObj["restored_affiliate_id_full_string"] || affiliate_data["restored_affiliate_id_full_string"] || existingObj["restored_affiliate_id_full_string"] || undefined,
+                restored_affiliate_timestamp_created: existingObj["restored_affiliate_timestamp_created"] || affiliate_data["restored_affiliate_timestamp_created"] || existingObj["restored_affiliate_timestamp_created"] || undefined,
+                restored_affiliate_timestamp_expired: existingObj["restored_affiliate_timestamp_expired"] || affiliate_data["restored_affiliate_timestamp_expired"] || existingObj["restored_affiliate_timestamp_expired"] || undefined,
+                current_affiliate_click_is_attributable: existingObj["current_affiliate_click_is_attributable"] || affiliate_data["current_affiliate_click_is_attributable"] || existingObj["current_affiliate_click_is_attributable"] || undefined,
+
+                created_at: existingObj["created_at"] || getTimestampInMilliseconds() || undefined,
+                stape_id: existingObj["stape_id"] || getStapeId() || undefined,
+                ga_client_id: existingObj["ga_client_id"] || setClientIdCookie() || undefined,
+                ga_session_id: existingObj["ga_session_id"] || getSessionID(gaMeasurementId) || undefined,
+                affiliation: existingObj["affiliation"] || getAffiliation() || undefined,
+                page_referrer: existingObj["page_referrer"] || getPageReferrer() || undefined,
+                last_uid: existingObj["last_uid"] || getLastUserId() || undefined,
+                user_agent: existingObj["user_agent"] || getUserAgent() || undefined,
+                summit_name: existingObj["summit_name"] || getSummitName() || undefined,
+                cookie_fbp: existingObj["cookie_fbp"] || generateFBPCookie() || undefined,
+                cookie_fbc: existingObj["cookie_fbc"] || generateFBCCookie() || undefined,
+                cookie_ttp: existingObj["cookie_ttp"] || getCookieValue("_ttp") || undefined,
+                utm_source: existingObj["utm_source"] || getUtmOrElValues("utm_source") || undefined,
+                utm_medium: existingObj["utm_medium"] || getUtmOrElValues("utm_medium") || undefined,
+                utm_campaign: existingObj["utm_campaign"] || getUtmOrElValues("utm_campaign") || undefined,
+                utm_content: existingObj["utm_content"] || getUtmOrElValues("utm_content") || undefined,
+                utm_term: existingObj["utm_term"] || getUtmOrElValues("utm_term") || undefined,
+                page_location: existingObj["page_location"] || getRootDomain() || undefined
+
+            });
+        } catch (error) {
+            console.error("Error 025: Failed to build object", error);
+        }
+
         // Store the updated object back into session storage
         storeValueToWindow(storageKey, JSON.stringify(existingObj));
-    
+
         return existingObj;
     }
 
     function fillTrackingTextAreas(json_data) {
-        if (!json_data) return;
+        try {
+            if (!json_data) return;
 
-        var string_data = encodeBase64(JSON.stringify(json_data));
-        document.querySelectorAll('textarea[placeholder="tracking_data"]').forEach(function (el) {
-            el.value = string_data;
-        });
+            var string_data = encodeBase64(JSON.stringify(json_data));
+            document.querySelectorAll('textarea[placeholder="tracking_data"]').forEach(function (el) {
+                el.value = string_data;
+            });
+        } catch (error) {
+            console.error("Error 026: Failed to store object", error);
+        }
 
     }
 
@@ -534,10 +639,14 @@
     }
 
     function hideAllTrackingTextAreas() {
-        document.querySelectorAll('textarea[placeholder="tracking_data"]').forEach(function (el) {
-            el.style.display = "none";
-            el.closest('.kartra_optin_cg').style.display = "none";
-        });
+        try {
+            document.querySelectorAll('textarea[placeholder="tracking_data"]').forEach(function (el) {
+                el.style.display = "none";
+                el.closest('.kartra_optin_cg').style.display = "none";
+            });
+        } catch (error) {
+            console.error("Error 027: Failed to hide texts", error);
+        }
     }
 
 
@@ -663,9 +772,9 @@
             runScriptSingleForm();
         }, 500);
 
-        setInterval(function(){
+        setInterval(function () {
             runScriptSingleForm();
-        },5000);
+        }, 5000);
 
     }
 
