@@ -777,6 +777,7 @@
                 document.querySelectorAll('a.toggle_optin, a.kartra_button1, button[type="submit"]').forEach(function (btn) {
                     btn.addEventListener("click", function () {
                         runScriptSingleForm();
+                        fireDataLayerEvent("data_processed");
                     });
                 });
             } catch (error) {
