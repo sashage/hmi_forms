@@ -348,22 +348,29 @@
 
     //Function get last user id
     function getLastUserId() {
-        var storedUserInfo = localStorage.getItem('_ud');
-        var userInfo;
-        if (storedUserInfo) {
-            try {
-                JSON.parse(decodeBase64(storedUserInfo));
-            } catch (e) {
-                console.error("", e)
+        try {
+            var storedUserInfo = localStorage.getItem('_ud');
+            var userInfo = {};
+            if (storedUserInfo) {
+                try {
+                    userInfo = JSON.parse(decodeBase64(storedUserInfo));
+                } catch (e) {
+                    console.error("Error 028: Failed to parse user info from local storage", e);
+                    localStorage.removeItem('_ud');
+                    return null;
+                }
+                var emailQueryParameter = extractEmailFromURL();
+                if (emailQueryParameter) {
+                    userInfo.user_id = window.btoa(emailQueryParameter.toLowerCase());
+                    window.localStorage.setItem("_ud", encodeBase64(JSON.stringify(userInfo)));
+                    return window.btoa(emailQueryParameter.toLowerCase());
+                } else if (userInfo.user_id) {
+                    return userInfo.user_id;
+                }
             }
-            var emailQueryParameter = extractEmailFromURL();
-            if (emailQueryParameter) {
-                userInfo.user_id = window.btoa(emailQueryParameter.toLowerCase());
-                window.localStorage.setItem("_ud", encodeBase64(JSON.stringify(userInfo)));
-                return window.btoa(emailQueryParameter);
-            } else if (userInfo && userInfo.user_id) {
-                return userInfo.user_id;
-            }
+            return null;
+        } catch (error) {
+            console.error("Error 029: Failed to get last user ID", error);
         }
     }
 
@@ -891,3 +898,4 @@
 
 
 })();
+
