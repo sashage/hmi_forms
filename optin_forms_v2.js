@@ -770,11 +770,16 @@
 
 
     function loadSingleformLander() {
-        document.querySelectorAll('a.toggle_optin, a.kartra_button1, button[type="submit"]').forEach(function (btn) {
-            btn.addEventListener("click", function () {
-                runScriptSingleForm();
+        try {
+            document.querySelectorAll('a.toggle_optin, a.kartra_button1, button[type="submit"]').forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    runScriptSingleForm();
+                });
             });
-        });
+        } catch (error) {
+            console.error("Error 035: Failed add event listeners", error);
+        }
+
         setTimeout(function () {
             runScriptSingleForm();
         }, 500);
@@ -831,11 +836,15 @@
 
     function countFormsOnPage() {
         var formsOnPage = 0;
-        document.querySelectorAll(".modal-body").forEach(function (el) {
-            var count = el.querySelectorAll("form").length;
-            if (count > formsOnPage) formsOnPage = count
-        });
-        return formsOnPage;
+        try {
+            document.querySelectorAll(".modal-body").forEach(function (el) {
+                var count = el.querySelectorAll("form").length;
+                if (count > formsOnPage) formsOnPage = count
+            });
+            return formsOnPage;
+        } catch (error) {
+            console.error("Error 034: Failed to count forms", error);
+        }
     }
 
     function checkIfCheckoutPage() {
@@ -877,23 +886,34 @@
 
     console.log("initializing...");
     console.log("setting landing page...");
-    window.page_type = "landing_page";
+    try {
+        window.page_type = "landing_page";
+    } catch (error) {
+        console.error("Error 031: failed to write to window", error);
+    }
 
+    try {
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(function () {
+                console.log("DOM Ready. Starting...")
+                fireDataLayerEvent("landing_page");
+                selectScriptForPageType();
+            }, 200);
+        });
+    } catch (error) {
+        console.error("Error 032: Failed add event listener", error);
+    }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        setTimeout(function () {
-            console.log("DOM Ready. Starting...")
-            fireDataLayerEvent("landing_page");
-            selectScriptForPageType();
-        }, 200);
-    });
-
-    if (document.readyState === "interactive") {
-        setTimeout(function () {
-            console.log("Page is interactive. Starting...")
-            fireDataLayerEvent("landing_page");
-            selectScriptForPageType();
-        }, 200);
+    try {
+        if (document.readyState === "interactive") {
+            setTimeout(function () {
+                console.log("Page is interactive. Starting...")
+                fireDataLayerEvent("landing_page");
+                selectScriptForPageType();
+            }, 200);
+        }
+    } catch (error) {
+        console.error("Error 033: Failed to run runscript", error);
     }
 
 
