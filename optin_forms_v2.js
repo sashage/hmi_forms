@@ -107,6 +107,8 @@
 
         //check if there is already valid stored affiliate data
         function getAffiliateData() {
+            var extracted_affiliate_id, extracted_affiliate_id_full_string;
+            
             try {
 
                 getAffiliateTimestampClick();
@@ -127,24 +129,42 @@
                 //let urlObj = new URL(decodeURIComponent(window.location.href)); //make sure the url is properly decoded before using it
                 //let fragment = urlObj.hash.substring(1); // Remove the '#' at the start
                 let url = decodeURIComponent(decodeURIComponent(window.location.href))
-                let fragment = url.split("#")[1];
-                // Replace non-alphanumeric characters with an empty string to keep only alphanumeric characters
-                // if (fragment !== null && ( fragment.indexOf("?") > -1 || fragment.indexOf("&") > -1 ) ) { // Ensure fragment is not null before applying the regex
-                //     fragment = fragment.split("?")[0];
-                //     fragment = fragment.split("&")[0];
-                // }
 
-                if (fragment !== null) {
-                    fragment = decodeURIComponent(fragment);
-                    fragment = extractAffiliateString(decodeURIComponent(fragment));
+                const regex = /(&|\?|#)a_aid(=|%3d|%3D)([A-Za-z0-9_-]+)/;
+
+                // Executing the regex on the provided URL
+                const matches = regex.exec(url.replace(/\s+/g, "").trim());
+            
+                // Check if we found affiliate_full_string
+                if (matches && matches[0]) {
+                    // Validate that the captured group only consists of allowed characters
+                    const idPattern_full_string = /^a_aid=[A-Za-z0-9_-]+$/;
+                    let shortenedString = decodeURIComponent(matches[0]).substring(1);
+                    
+                    if (idPattern_full_string.test(shortenedString)) {
+                        extracted_affiliate_id_full_string = shortened_String;
+
+                        // Check if we found affiliate_id inside fullstring
+                        if (matches[3]) {
+                            // Validate that the captured group only consists of allowed characters
+                            const idPattern = /^[A-Za-z0-9_-]+$/;
+                            if (idPattern.test(matches[3])) {
+                                extracted_affiliate_id = matches[3];
+                            }
+                            
+                        }
+                        
+                    }
+                    
                 }
 
-                if (fragment.indexOf("a_aid") > -1) {
-                    json_data.affiliate_id_full_string = fragment;
+                
+                if (  extracted_affiliate_id_full_string || extracted_affiliate_id ) {
+                    json_data.affiliate_id_full_string = extracted_affiliate_id_full_string;
 
                     //let params = new URLSearchParams(fragment);
                     //let hmi_aaid = params.get('a_aid'); //default PAP Affiliare ID from URL
-                    let hmi_aaid = fragment.replace(/\s+/g, "").split("=")[1].trim();
+                    let hmi_aaid = extracted_affiliate_id;
 
                     const now = new Date();
                     const expirationTimestamp = new Date(now.setDate(now.getDate() + 60)).getTime();
