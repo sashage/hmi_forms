@@ -142,7 +142,7 @@
                     let shortenedString = decodeURIComponent(matches[0]).substring(1);
                     
                     if (idPattern_full_string.test(shortenedString)) {
-                        extracted_affiliate_id_full_string = shortened_String;
+                        extracted_affiliate_id_full_string = shortenedString;
 
                         // Check if we found affiliate_id inside fullstring
                         if (matches[3]) {
