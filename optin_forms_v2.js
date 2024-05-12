@@ -128,12 +128,12 @@
 
                 //let urlObj = new URL(decodeURIComponent(window.location.href)); //make sure the url is properly decoded before using it
                 //let fragment = urlObj.hash.substring(1); // Remove the '#' at the start
-                let url = decodeURIComponent(decodeURIComponent(window.location.href))
+                let url = decodeURIComponent(decodeURIComponent(window.location.href)).replace(/\s+/g, "").trim()
 
                 const regex = /(&|\?|#)a_aid(=|%3d|%3D)([A-Za-z0-9_-]+)/;
 
                 // Executing the regex on the provided URL
-                const matches = regex.exec(url.replace(/\s+/g, "").trim());
+                const matches = regex.exec(url);
             
                 // Check if we found affiliate_full_string
                 if (matches && matches[0]) {
