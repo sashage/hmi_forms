@@ -138,21 +138,21 @@
                 // Check if we found affiliate_full_string
                 if (matches && matches[0]) {
                     // Validate that the captured group only consists of allowed characters
+                    console.log("Affiliate Data: ", matches)
                     const idPattern_full_string = /^a_aid[=|%3d|%3D][A-Za-z0-9_-]+$/;
                     let shortenedString = decodeURIComponent(matches[0]).substring(1);
                     
                     if (idPattern_full_string.test(shortenedString)) {
                         extracted_affiliate_id_full_string = shortenedString;
-
                         // Check if we found affiliate_id inside fullstring
-                        if (matches[3]) {
+                        if (matches[1]) {
                             // Validate that the captured group only consists of allowed characters
                             const idPattern = /^[A-Za-z0-9_-]+$/;
-                            if (idPattern.test(matches[3])) {
+                            if (idPattern.test(matches[1])) {
                                 extracted_affiliate_id = matches[3];
                             }
                         else if (extracted_affiliate_id_full_string) {
-                            const idPattern_full_string_extract = /^a_aid[=|%3d|%3D]([A-Za-z0-9_-]+)$/;
+                            const idPattern_full_string_extract = /^a_aid[=|%3d|%3D]([A-Za-z0-9_-]+).*$/;
                             var extracted_id = idPattern_full_string_extract.exec(extracted_affiliate_id_full_string);
                             extracted_affiliate_id = extracted_id[1]
                         }
