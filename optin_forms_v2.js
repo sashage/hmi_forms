@@ -151,6 +151,11 @@
                             if (idPattern.test(matches[3])) {
                                 extracted_affiliate_id = matches[3];
                             }
+                        else if (extracted_affiliate_id_full_string) {
+                            const idPattern_full_string_extract = /^a_aid[=|%3d|%3D]([A-Za-z0-9_-]+)$/;
+                            var extracted_id = idPattern_full_string_extract.exec(extracted_affiliate_id_full_string);
+                            extracted_affiliate_id = extracted_id[1]
+                        }
                             
                         }
                         
