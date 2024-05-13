@@ -130,7 +130,7 @@
                 //let fragment = urlObj.hash.substring(1); // Remove the '#' at the start
                 let url = decodeURIComponent(decodeURIComponent(window.location.href)).replace(/\s+/g, "").trim()
 
-                const regex = /(&|\?|#)a_aid(=|%3d|%3D)([A-Za-z0-9_-]+)/;
+                const regex = /[&|\?|#]a_aid[=|%3d|%3D]([A-Za-z0-9_-]+)/;
 
                 // Executing the regex on the provided URL
                 const matches = regex.exec(url);
@@ -138,7 +138,7 @@
                 // Check if we found affiliate_full_string
                 if (matches && matches[0]) {
                     // Validate that the captured group only consists of allowed characters
-                    const idPattern_full_string = /^a_aid=[A-Za-z0-9_-]+$/;
+                    const idPattern_full_string = /^a_aid[=|%3d|%3D][A-Za-z0-9_-]+$/;
                     let shortenedString = decodeURIComponent(matches[0]).substring(1);
                     
                     if (idPattern_full_string.test(shortenedString)) {
