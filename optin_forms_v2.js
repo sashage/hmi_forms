@@ -169,7 +169,7 @@
 
                     //let params = new URLSearchParams(fragment);
                     //let hmi_aaid = params.get('a_aid'); //default PAP Affiliare ID from URL
-                    let hmi_aaid = extracted_affiliate_id;
+                    let hmi_aaid = extracted_affiliate_id || extracted_affiliate_id_full_string.split("=")[1];
 
                     const now = new Date();
                     const expirationTimestamp = new Date(now.setDate(now.getDate() + 60)).getTime();
