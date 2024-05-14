@@ -138,7 +138,7 @@
                 // Check if we found affiliate_full_string
                 if (matches && matches[0]) {
                     // Validate that the captured group only consists of allowed characters
-                    console.log("Affiliate Data: ", matches)
+                    //console.log("Affiliate Data: ", matches)
                     const idPattern_full_string = /^a_aid[=|%3d|%3D][A-Za-z0-9_-]+$/;
                     let shortenedString = decodeURIComponent(matches[0]).substring(1);
                     
