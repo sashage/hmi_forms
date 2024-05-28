@@ -344,12 +344,29 @@ function parseCookies(cookieString) {
 }
 
 function getTimestampInMilliseconds() {
-  return Date.now();
+    try {
+	return Date.now() || new Date().getTime();
+    } catch (error) {
+	console.error("Error 019: Failed to get timestamp", error);
+    }
+}
+
+function getTimestampInMicroseconds() {
+    try {
+	var millis = getTimestampInMilliseconds();
+	var randomNumber = Math.floor(Math.random() * 1000);
+	if (millis && randomNumber) {
+	    return (millis * 1000) + randomNumber;
+	}
+	return undefined;
+    } catch (error) {
+	console.error("Error 020: Failed to get timestamp", error);
+    }
 }
 
 function buildTrackingObject() {
     var obj = {
-        "created_at": getTimestampInMilliseconds(),
+        "created_at": getTimestampInMicroseconds(),
         "cookie_fbp": generateFBPCookie(),
         "cookie_fbc": generateFBCCookie(),
 	"cookie_ttp": getCookieValue("_ttp"),
