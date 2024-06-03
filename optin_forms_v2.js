@@ -857,8 +857,9 @@
                 document.querySelectorAll('a.toggle_contentbox').forEach(function (btn) {
                     btn.addEventListener("click", function () {
                         setTimeout(function () {
-                            resetMultiForms();
+                            
                             runScriptMultiForm();
+                            resetMultiForms();
                         }, 200)
                     });
                     console.log("added event listeners...");
