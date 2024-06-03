@@ -700,10 +700,10 @@
 
         // ########### multi page run function ##################################
 
-        function runScriptMultiForm() {
-
-            console.log("running MultiForm script...")
+        function runScriptMultiForm(isReset) {
             
+            console.log("running MultiForm script...")
+            if (isReset == "reset") resetMultiForms();
             // Handle button show/hide logic
             firstButtonContainers.forEach((btnContainer, index) => {
                 btnContainer.addEventListener("click", function () {
@@ -848,7 +848,7 @@
                 document.querySelectorAll('button[type="submit"]').forEach(function (btn) {
                     btn.addEventListener("click", function () {
                         setTimeout(function () {
-                            runScriptMultiForm();
+                            runScriptMultiForm("noReset");
                         }, 200)
                     });
                     console.log("added event listeners...");
@@ -858,8 +858,8 @@
                     btn.addEventListener("click", function () {
                         setTimeout(function () {
                             
-                            runScriptMultiForm();
-                            resetMultiForms();
+                            runScriptMultiForm("reset");
+                            
                         }, 200)
                     });
                     console.log("added event listeners...");
