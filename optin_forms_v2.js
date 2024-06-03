@@ -703,7 +703,7 @@
         function runScriptMultiForm() {
 
             console.log("running MultiForm script...")
-            resetMultiForms();
+            
             // Handle button show/hide logic
             firstButtonContainers.forEach((btnContainer, index) => {
                 btnContainer.addEventListener("click", function () {
@@ -845,9 +845,19 @@
                     });
                 });
 
-                document.querySelectorAll('a.toggle_contentbox, button[type="submit"]').forEach(function (btn) {
+                document.querySelectorAll('button[type="submit"]').forEach(function (btn) {
                     btn.addEventListener("click", function () {
                         setTimeout(function () {
+                            runScriptMultiForm();
+                        }, 200)
+                    });
+                    console.log("added event listeners...");
+                });
+
+                document.querySelectorAll('a.toggle_contentbox').forEach(function (btn) {
+                    btn.addEventListener("click", function () {
+                        setTimeout(function () {
+                            resetMultiForms();
                             runScriptMultiForm();
                         }, 200)
                     });
