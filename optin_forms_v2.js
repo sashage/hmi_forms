@@ -632,17 +632,17 @@
                     affiliation: getAffiliation() || undefined,
                     page_referrer: getPageReferrer() || undefined,
                     last_uid: getLastUserId() || undefined,
-                    user_agent: existingObj["user_agent"] || getUserAgent() || undefined,
-                    summit_name: existingObj["summit_name"] || getSummitName() || undefined,
-                    cookie_fbp: existingObj["cookie_fbp"] || generateFBPCookie() || undefined,
-                    cookie_fbc: existingObj["cookie_fbc"] || generateFBCCookie() || undefined,
-                    cookie_ttp: existingObj["cookie_ttp"] || getCookieValue("_ttp") || undefined,
-                    utm_source: existingObj["utm_source"] || getUtmOrElValues("utm_source") || undefined,
-                    utm_medium: existingObj["utm_medium"] || getUtmOrElValues("utm_medium") || undefined,
-                    utm_campaign: existingObj["utm_campaign"] || getUtmOrElValues("utm_campaign") || undefined,
-                    utm_content: existingObj["utm_content"] || getUtmOrElValues("utm_content") || undefined,
-                    utm_term: existingObj["utm_term"] || getUtmOrElValues("utm_term") || undefined,
-                    page_location: existingObj["page_location"] || getRootDomain() || undefined
+                    user_agent: getUserAgent() || undefined,
+                    summit_name: getSummitName() || undefined,
+                    cookie_fbp: generateFBPCookie() || undefined,
+                    cookie_fbc: generateFBCCookie() || undefined,
+                    cookie_ttp: getCookieValue("_ttp") || undefined,
+                    utm_source: getUtmOrElValues("utm_source") || undefined,
+                    utm_medium: getUtmOrElValues("utm_medium") || undefined,
+                    utm_campaign: getUtmOrElValues("utm_campaign") || undefined,
+                    utm_content: getUtmOrElValues("utm_content") || undefined,
+                    utm_term: getUtmOrElValues("utm_term") || undefined,
+                    page_location: getRootDomain() || undefined
 
                 });
             } catch (error) {
