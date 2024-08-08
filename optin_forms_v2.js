@@ -864,6 +864,10 @@
                     });
                     console.log("added event listeners...");
                 });
+                
+                setTimeout(function () {
+                    runScriptMultiForm("noReset");
+                }, 200)
             }, 500);
         }
 
