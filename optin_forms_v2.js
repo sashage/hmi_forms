@@ -361,6 +361,10 @@
             return localStorage.getItem('affiliation');
         }
 
+        function getAudience() {
+            return localStorage.getItem('audience');
+        }
+
 
         function isNumber(value) {
 
@@ -630,6 +634,7 @@
                     ga_client_id: setClientIdCookie() || undefined,
                     ga_session_id: getSessionID(gaMeasurementId) || undefined,
                     affiliation: getAffiliation() || undefined,
+                    audience: getAudience() || undefined,
                     page_referrer: getPageReferrer() || undefined,
                     last_uid: getLastUserId() || undefined,
                     user_agent: getUserAgent() || undefined,
@@ -716,6 +721,7 @@
                             if (secondButtonForm) secondButtonForm.style.display = 'none';
                             hideAllButtons();
                         });
+                        window.localStorage.audience = "general";
                     }, 200);
                 });
             });
@@ -731,6 +737,7 @@
                             if (firstButtonForm) firstButtonForm.style.display = 'none';
                             hideAllButtons();
                         });
+                        window.localStorage.audience = "mhp";
                     }, 200);
                 });
             });
