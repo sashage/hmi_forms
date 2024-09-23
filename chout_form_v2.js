@@ -378,6 +378,7 @@ function buildTrackingObject() {
         "utm_content": getUtmOrElValues("utm_content"),
         "utm_term": getUtmOrElValues("utm_term"),
         "affiliation": getAffiliation(),
+	"audience": getAudience(),
         "page_location": getRootDomain(),
         "last_uid": getLastUserId(),
         "user_agent": getUserAgent(),
@@ -400,6 +401,10 @@ function buildTrackingObject() {
 
 function getAffiliation() {
     return localStorage.getItem('affiliation');
+}
+
+function getAudience() {
+    return localStorage.getItem('audience');
 }
 
 function extractEmailFromURL() {
