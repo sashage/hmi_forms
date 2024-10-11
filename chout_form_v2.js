@@ -117,11 +117,11 @@ function getLastUserId() {
     
     var emailQueryParameter = extractEmailFromURL();
     if ( emailQueryParameter ) {
-        userInfo.user_id = encodeBase64(emailQueryParameter);
+        userInfo.user_id = encodeBase64(decodeURIComponent(emailQueryParameter));
         localStorage.setItem("_ud",encodeBase64(JSON.stringify(userInfo)));
-        return encodeBase64(emailQueryParameter);
+        return encodeBase64(decodeURIComponent(emailQueryParameter));
     } else if (userInfo && userInfo.user_id) {
-        return userInfo.user_id;
+        return decodeURIComponent(userInfo.user_id);
     }
 }
 
