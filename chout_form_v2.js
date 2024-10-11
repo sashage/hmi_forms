@@ -414,6 +414,8 @@ function extractEmailFromURL() {
     // Use URLSearchParams to get the value of the 'he' parameter
     var email = urlObj.searchParams.get("he");
 
+    if ( email ) { email = decodeURIComponent(email); }
+
     // If the email parameter exists in the URL
     return email || null;
 
