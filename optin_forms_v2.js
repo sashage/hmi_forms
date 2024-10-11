@@ -393,11 +393,11 @@
                     }
                     var emailQueryParameter = extractEmailFromURL();
                     if (emailQueryParameter) {
-                        userInfo.user_id = window.btoa(emailQueryParameter.toLowerCase());
+                        userInfo.user_id = window.btoa(decodeURIComponent(emailQueryParameter.toLowerCase()));
                         window.localStorage.setItem("_ud", encodeBase64(JSON.stringify(userInfo)));
-                        return window.btoa(emailQueryParameter.toLowerCase());
-                    } else if (userInfo.user_id) {
-                        return userInfo.user_id;
+                        return window.btoa(decodeURIComponent(emailQueryParameter.toLowerCase()));
+                    } else if (userInfo && userInfo.user_id) {
+                        return decodeURIComponent(userInfo.user_id);
                     }
                 }
                 return null;
