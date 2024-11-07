@@ -932,6 +932,12 @@
                     loadSingleformLander();
                 }
 
+                else {
+                    console.log("Just run script");
+                    var trackingData = buildTrackingObject();
+                    fillTrackingTextAreas(trackingData);
+                }
+
             }
         }
 
