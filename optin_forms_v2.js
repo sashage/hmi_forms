@@ -937,7 +937,7 @@
                         console.log("Just run script");
                         var trackingData = buildTrackingObject();
                         fillTrackingTextAreas(trackingData);
-                    },1000);
+                    },2000);
                 }
 
             }
