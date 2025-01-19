@@ -691,6 +691,34 @@
             }
         }
 
+        function prefillEmailAddressinForms() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const emailParam = urlParams.get('he');
+            const emailInputName = 'email'; // Input field name attribute
+            const localStorageKey = 'email';
+        
+            // Helper function to populate input fields
+            function populateEmailFields(email) {
+                const emailInputs = document.querySelectorAll(`input[name="${emailInputName}"]`);
+                emailInputs.forEach(input => {
+                    input.value = email;
+                });
+            }
+        
+            if (emailParam) {
+                // URL decode the email and store it in localStorage
+                const decodedEmail = decodeURIComponent(emailParam);
+                localStorage.setItem(localStorageKey, decodedEmail);
+                populateEmailFields(decodedEmail);
+            } else {
+                // Check localStorage if query parameter is not present
+                const storedEmail = localStorage.getItem(localStorageKey);
+                if (storedEmail) {
+                    populateEmailFields(storedEmail);
+                }
+            }
+        }
+
 
 
 
@@ -794,6 +822,7 @@
                         elem.style.display = "none";
                     });
                 });
+
             }
 
             hideAllTrackingTextAreas();
@@ -820,6 +849,7 @@
 
             setTimeout(function () {
                 runScriptSingleForm();
+                prefillEmailAddressinForms();
             }, 500);
 
             setInterval(function () {
@@ -868,6 +898,7 @@
                         setTimeout(function () {
                             
                             runScriptMultiForm("reset");
+                            prefillEmailAddressinForms();
                             
                         }, 200)
                     });
@@ -876,6 +907,7 @@
                 
                 setTimeout(function () {
                     runScriptMultiForm("noReset");
+                    prefillEmailAddressinForms();
                 }, 200)
             }, 500);
         }
