@@ -221,7 +221,6 @@ function getCookieValue(name) {
     return '';
 }
 
-
 function getStapeId() {
     var stape_id = getCookieValue("_hmi_stape_id");
     if (stape_id) return stape_id;
@@ -319,11 +318,6 @@ function setClientIdCookie() {
     }
 
     return clientId;
-}
-
-function getCookieValue(cookieName) {
-    var matches = document.cookie.match('(^|;)\\s*' + cookieName + '\\s*=\\s*([^;]+)');
-    return matches ? matches.pop() : '';
 }
 
 // Get URL parameters.
