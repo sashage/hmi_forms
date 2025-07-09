@@ -358,13 +358,17 @@ function getTimestampInMicroseconds() {
     }
 }
 
+function getImpactIdentifier() {
+	return getCookieValue("impact_cid") || getUrlParameter('irclickid') || undefined;
+}
+
 function buildTrackingObject() {
     var obj = {
         "created_at": getTimestampInMicroseconds(),
         "cookie_fbp": generateFBPCookie(),
         "cookie_fbc": generateFBCCookie(),
 	"cookie_ttp": getCookieValue("_ttp"),
-	"cookie_impact_cid": getCookieValue("impact_cid") || getUrlParameter('irclickid'),
+	"cookie_impact_cid": getImpactIdentifier(),
         "ga_client_id": setClientIdCookie(),
         "ga_session_id": getSessionID(gaMeasurementId),
         "utm_source": getUtmOrElValues("utm_source"),
